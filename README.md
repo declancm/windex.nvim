@@ -1,6 +1,6 @@
 # windex.nvim
 
-__A neovim plugin for cleeean 🧼 nvim window and tmux pane functions.__
+🧼 __A neovim plugin for cleeean nvim window and tmux pane functions.__ 🧼
 
 ## ✨ Features
 
@@ -22,6 +22,10 @@ __A neovim plugin for cleeean 🧼 nvim window and tmux pane functions.__
 * Toggle the (improved) native terminal which will open fullscreen.
 
 ## 🎞️ Demo Video
+
+### Nvim Window / Tmux Pane Movement and Terminal Toggle
+
+<https://user-images.githubusercontent.com/90937622/159681079-58f36668-e78b-41fa-b929-e9ebc9dd8d3b.mp4>
 
 ## 📦 Installation
 
