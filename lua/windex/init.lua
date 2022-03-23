@@ -42,6 +42,10 @@ M.setup = function(options)
   vim.cmd [[au FocusGained * lua vim.g.__windex_previous = 'tmux']]
   vim.cmd [[au WinLeave * lua vim.g.__windex_previous = 'nvim']]
 
+  -- Delete session file from cache.
+  vim.cmd [[au VimEnter * call delete(getenv('HOME') . '/.cache/nvim/.maximize_session.vim')]]
+  vim.cmd [[au VimLeave * call delete(getenv('HOME') . '/.cache/nvim/.maximize_session.vim')]]
+
   local keymap = vim.api.nvim_set_keymap
   local opts = { noremap = true, silent = true }
 

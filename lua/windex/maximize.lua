@@ -3,23 +3,25 @@ local M = {}
 -- Toggle maximizing nvim window.
 M.toggle_nvim = function()
   if not vim.w.__window_maximized then
-    -- Maximize
+    -- Maximize nvim windows.
     if vim.fn.winnr() == 1 then
       vim.cmd [[echohl ErrorMsg | echo "Error: Only one window." | echohl None ]]
       return
     end
     local savedOptions = vim.opt.sessionoptions
     vim.opt.sessionoptions = { 'blank', 'buffers', 'curdir', 'folds', 'help', 'tabpages', 'winsize' }
-    vim.cmd 'mksession! .maximize_session.vim'
+    vim.cmd 'mksession! ~/.cache/nvim/.maximize_session.vim'
     vim.opt.sessionoptions = savedOptions
     vim.cmd 'only'
     vim.w.__window_maximized = true
   else
-    -- Unmaximize
-    local savedPosition = vim.fn.getcurpos()
-    vim.cmd 'so ./.maximize_session.vim'
-    vim.fn.delete './.maximize_session.vim'
-    vim.fn.setpos('.', savedPosition)
+    -- Restore nvim windows.
+    if vim.fn.filereadable(vim.fn.getenv 'HOME' .. '/.cache/nvim/.maximize_session.vim') == 1 then
+      local savedPosition = vim.fn.getcurpos()
+      vim.cmd 'so ~/.cache/nvim/.maximize_session.vim'
+      vim.fn.delete(vim.fn.getenv 'HOME' .. '/.cache/nvim/.maximize_session.vim')
+      vim.fn.setpos('.', savedPosition)
+    end
     vim.w.__window_maximized = false
   end
 end
@@ -42,7 +44,7 @@ M.maximize = function()
   if vim.fn.winnr() ~= 1 then
     local savedOptions = vim.opt.sessionoptions
     vim.opt.sessionoptions = { 'blank', 'buffers', 'curdir', 'folds', 'help', 'tabpages', 'winsize' }
-    vim.cmd 'mksession! .maximize_session.vim'
+    vim.cmd 'mksession! ~/.cache/nvim/.maximize_session.vim'
     vim.opt.sessionoptions = savedOptions
     vim.cmd 'only'
   end
@@ -56,10 +58,10 @@ end
 -- Restore the nvim windows and tmux panes.
 M.restore = function()
   -- Restore nvim windows.
-  if vim.fn.filereadable './.maximize_session.vim' == 1 then
+  if vim.fn.filereadable(vim.fn.getenv 'HOME' .. '/.cache/nvim/.maximize_session.vim') == 1 then
     local savedPosition = vim.fn.getcurpos()
-    vim.cmd 'so ./.maximize_session.vim'
-    vim.fn.delete './.maximize_session.vim'
+    vim.cmd 'so ~/.cache/nvim/.maximize_session.vim'
+    vim.fn.delete(vim.fn.getenv 'HOME' .. '/.cache/nvim/.maximize_session.vim')
     vim.fn.setpos('.', savedPosition)
   end
   -- Restore tmux panes.
