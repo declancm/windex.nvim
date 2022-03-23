@@ -21,11 +21,22 @@
 
 * Toggle the (improved) native terminal which will open fullscreen.
 
-## 🎞️ Demo Video
+## ⏱️ Maximizing Window Comparison
 
-### Nvim Window / Tmux Pane Movement and Terminal Toggle
+A comparison of vim-maximizer and windex.nvim with maximizing a nvim window and a tmux pane split.
 
-<https://user-images.githubusercontent.com/90937622/159681079-58f36668-e78b-41fa-b929-e9ebc9dd8d3b.mp4>
+### vim-maximizer
+
+Has weird thing in top where it didn't maximize properly and doesn't maximize the tmux pane.
+
+<![vim-maximizer](https://user-images.githubusercontent.com/90937622/159694125-322f371f-4334-4731-bf02-cfde05945654.png)>
+
+### windex.nvim
+
+Perfectly maximizes the nvim window and tmux pane! 👑
+
+<![windex](https://user-images.githubusercontent.com/90937622/159694138-5b99ec1d-e860-42fb-9af6-ca23b98dda25.png)>
+
 
 ## 📦 Installation
 
@@ -84,3 +95,9 @@ keymap('t', '<C-n>', '<C-Bslash><C-N>', opts)
 _Note: The default keymap to toggle the terminal is CTRL-\\. To enter normal mode in
 terminal, the key combination is CTRL-\\ + CTRL-N which is no longer possible to 
 execute. This sequence is remapped to CTRL-N by default._
+
+## 🎞️ Demo Video
+
+### Nvim Window / Tmux Pane Movement and Terminal Toggle
+
+<https://user-images.githubusercontent.com/90937622/159681079-58f36668-e78b-41fa-b929-e9ebc9dd8d3b.mp4>
