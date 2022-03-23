@@ -1,13 +1,22 @@
 local M = {}
 
--- TODO: save all active session file locations to a list then delete on VimLeave
-
 M.setup = function(options)
   vim.g.__windex_setup_completed = 1
+
+  -- Check if user is on Windows.
+  if vim.fn.has 'win32' == 1 then
+    vim.cmd [[
+    echohl WarningMsg
+    echo "Error: A unix system is required for 'windex' :(. Have you tried using WSL?"
+    echohl None
+    ]]
+    return
+  end
 
   -- Default values:
   local defaults = {
     default_keymaps = true,
+    arrow_keys = false,
     disable = false,
   }
 
@@ -27,14 +36,11 @@ M.setup = function(options)
   end
 
   -- Restore windows when terminal is exited.
-  vim.cmd [[au TermClose * lua require('windex.functions').restore_all()]]
+  vim.cmd [[au TermClose * lua require('windex.maximize').restore()]]
 
   -- Previous window function autocmds.
   vim.cmd [[au FocusGained * lua vim.g.__windex_previous = 'tmux']]
   vim.cmd [[au WinLeave * lua vim.g.__windex_previous = 'nvim']]
-
-  -- Delete session file.
-  -- vim.cmd [[au WinLeave * if &buftype != '' | call delete('./.maximize_session.vim') | endif]]
 
   local keymap = vim.api.nvim_set_keymap
   local opts = { noremap = true, silent = true }
@@ -53,54 +59,60 @@ M.setup = function(options)
     -- Switch to previous nvim window or tmux pane.
     keymap('n', '<Leader>;', "<Cmd>lua require('windex').previous_window()<CR>", opts)
 
-    -- Move between nvim windows and tmux panes.
-    keymap('n', '<Leader>k', "<Cmd>lua require('windex').switch_to('Up')<CR>", opts)
-    keymap('n', '<Leader>j', "<Cmd>lua require('windex').switch_to('Down')<CR>", opts)
-    keymap('n', '<Leader>h', "<Cmd>lua require('windex').switch_to('Left')<CR>", opts)
-    keymap('n', '<Leader>l', "<Cmd>lua require('windex').switch_to('Right')<CR>", opts)
-    keymap('n', '<Leader><Up>', "<Cmd>lua require('windex').switch_to('Up')<CR>", opts)
-    keymap('n', '<Leader><Down>', "<Cmd>lua require('windex').switch_to('Down')<CR>", opts)
-    keymap('n', '<Leader><Left>', "<Cmd>lua require('windex').switch_to('Left')<CR>", opts)
-    keymap('n', '<Leader><Right>', "<Cmd>lua require('windex').switch_to('Right')<CR>", opts)
+    if options.arrow_keys == false then
+      -- Move between nvim windows and tmux panes.
+      keymap('n', '<Leader>k', "<Cmd>lua require('windex').switch_window('Up')<CR>", opts)
+      keymap('n', '<Leader>j', "<Cmd>lua require('windex').switch_window('Down')<CR>", opts)
+      keymap('n', '<Leader>h', "<Cmd>lua require('windex').switch_window('Left')<CR>", opts)
+      keymap('n', '<Leader>l', "<Cmd>lua require('windex').switch_window('Right')<CR>", opts)
 
-    -- Save and close the window in the direction selected.
-    keymap('n', '<Leader>xk', "<Cmd>lua require('windex').quit('Up')<CR>", opts)
-    keymap('n', '<Leader>xj', "<Cmd>lua require('windex').quit('Down')<CR>", opts)
-    keymap('n', '<Leader>xh', "<Cmd>lua require('windex').quit('Left')<CR>", opts)
-    keymap('n', '<Leader>xl', "<Cmd>lua require('windex').quit('Right')<CR>", opts)
-    keymap('n', '<Leader>x<Up>', "<Cmd>lua require('windex').quit('Up')<CR>", opts)
-    keymap('n', '<Leader>x<Down>', "<Cmd>lua require('windex').quit('Down')<CR>", opts)
-    keymap('n', '<Leader>x<Left>', "<Cmd>lua require('windex').quit('Left')<CR>", opts)
-    keymap('n', '<Leader>x<Right>', "<Cmd>lua require('windex').quit('Right')<CR>", opts)
+      -- Save and close the window in the direction selected.
+      keymap('n', '<Leader>xk', "<Cmd>lua require('windex').close_window('Up')<CR>", opts)
+      keymap('n', '<Leader>xj', "<Cmd>lua require('windex').close_window('Down')<CR>", opts)
+      keymap('n', '<Leader>xh', "<Cmd>lua require('windex').close_window('Left')<CR>", opts)
+      keymap('n', '<Leader>xl', "<Cmd>lua require('windex').close_window('Right')<CR>", opts)
+    else
+      -- Move between nvim windows and tmux panes.
+      keymap('n', '<Leader><Up>', "<Cmd>lua require('windex').switch_window('Up')<CR>", opts)
+      keymap('n', '<Leader><Down>', "<Cmd>lua require('windex').switch_window('Down')<CR>", opts)
+      keymap('n', '<Leader><Left>', "<Cmd>lua require('windex').switch_window('Left')<CR>", opts)
+      keymap('n', '<Leader><Right>', "<Cmd>lua require('windex').switch_window('Right')<CR>", opts)
+
+      -- Save and close the window in the direction selected.
+      keymap('n', '<Leader>x<Up>', "<Cmd>lua require('windex').close_window('Up')<CR>", opts)
+      keymap('n', '<Leader>x<Down>', "<Cmd>lua require('windex').close_window('Down')<CR>", opts)
+      keymap('n', '<Leader>x<Left>', "<Cmd>lua require('windex').close_window('Left')<CR>", opts)
+      keymap('n', '<Leader>x<Right>', "<Cmd>lua require('windex').close_window('Right')<CR>", opts)
+    end
   end
 end
 
 M.toggle_terminal = function(...)
-  require('windex.functions').toggle_terminal(...)
+  require('windex.terminal').toggle(...)
 end
 M.toggle_nvim_maximize = function()
-  require('windex.functions').toggle_nvim_maximize()
+  require('windex.maximize').toggle_nvim()
 end
 M.toggle_maximize = function()
-  require('windex.functions').toggle_maximize()
+  require('windex.maximize').toggle()
 end
 M.maximize_windows = function()
-  require('windex.functions').maximize_all()
+  require('windex.maximize').maximize()
 end
 M.restore_windows = function()
-  require('windex.functions').restore_all()
+  require('windex.maximize').restore()
 end
-M.quit = function(...)
-  require('windex.functions').quit(...)
+M.close_window = function(...)
+  require('windex.movement').close(...)
 end
-M.switch_to = function(...)
-  require('windex.functions').switch_to(...)
+M.switch_window = function(...)
+  require('windex.movement').switch(...)
 end
 M.previous = function()
-  require('windex.functions').previous()
+  require('windex.movement').previous()
 end
 M.create_tmux_pane = function(...)
-  require('windex.functions').create_tmux_pane(...)
+  require('windex.movement').create_tmux_pane(...)
 end
 
 return M
