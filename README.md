@@ -29,7 +29,7 @@
 
 * Jump to the last nvim window or tmux pane.
 
-  `lua require('windex').close_window(<direction>)`
+  `lua require('windex').previous_window()`
 
 ### Terminal Toggle
 
