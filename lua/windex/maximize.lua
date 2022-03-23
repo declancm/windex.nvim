@@ -4,7 +4,7 @@ local M = {}
 M.toggle_nvim = function()
   if not vim.w.__window_maximized then
     -- Maximize nvim windows.
-    if vim.fn.winnr() == 1 then
+    if vim.fn.winnr '$' == 1 then
       vim.cmd [[echohl ErrorMsg | echo "Error: Only one window." | echohl None ]]
       return
     end
@@ -41,7 +41,7 @@ end
 -- Maximize the current nvim window and tmux pane.
 M.maximize = function()
   -- Maximize nvim window.
-  if vim.fn.winnr() ~= 1 then
+  if vim.fn.winnr '$' ~= 1 then
     local savedOptions = vim.opt.sessionoptions
     vim.opt.sessionoptions = { 'blank', 'buffers', 'curdir', 'folds', 'help', 'tabpages', 'winsize' }
     vim.cmd 'mksession! ~/.cache/nvim/.maximize_session.vim'
