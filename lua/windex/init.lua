@@ -4,12 +4,12 @@ M.setup = function(options)
   vim.g.__windex_setup_completed = 1
 
   -- Check if user is on Windows.
-  if vim.fn.has 'win32' == 1 then
-    vim.cmd [[
+  if vim.fn.has('win32') == 1 then
+    vim.cmd([[
     echohl WarningMsg
     echo "Error: A unix system is required for 'windex' :(. Have you tried using WSL?"
     echohl None
-    ]]
+    ]])
     return
   end
 
@@ -36,24 +36,24 @@ M.setup = function(options)
   end
 
   -- Restore windows when terminal is exited.
-  vim.cmd [[aug windex_terminal]]
-  vim.cmd [[au!]]
-  vim.cmd [[au TermClose * lua require('windex.maximize').restore()]]
-  vim.cmd [[aug END]]
+  vim.cmd([[aug windex_terminal]])
+  vim.cmd([[au!]])
+  vim.cmd([[au TermClose * lua require('windex.maximize').restore()]])
+  vim.cmd([[aug END]])
 
   -- Previous window function autocmds.
-  vim.cmd [[aug windex_previous]]
-  vim.cmd [[au!]]
-  vim.cmd [[au FocusGained * lua vim.g.__windex_previous = 'tmux']]
-  vim.cmd [[au WinLeave * lua vim.g.__windex_previous = 'nvim']]
-  vim.cmd [[aug END]]
+  vim.cmd([[aug windex_previous]])
+  vim.cmd([[au!]])
+  vim.cmd([[au FocusGained * lua vim.g.__windex_previous = 'tmux']])
+  vim.cmd([[au WinLeave * lua vim.g.__windex_previous = 'nvim']])
+  vim.cmd([[aug END]])
 
   -- Delete session file from cache.
-  vim.cmd [[aug windex_maximize]]
-  vim.cmd [[au!]]
-  vim.cmd [[au VimEnter * call delete(getenv('HOME') . '/.cache/nvim/.maximize_session.vim')]]
-  vim.cmd [[au VimLeave * call delete(getenv('HOME') . '/.cache/nvim/.maximize_session.vim')]]
-  vim.cmd [[aug END]]
+  vim.cmd([[aug windex_maximize]])
+  vim.cmd([[au!]])
+  vim.cmd([[au VimEnter * call delete(getenv('HOME') . '/.cache/nvim/.maximize_session.vim')]])
+  vim.cmd([[au VimLeave * call delete(getenv('HOME') . '/.cache/nvim/.maximize_session.vim')]])
+  vim.cmd([[aug END]])
 
   local keymap = vim.api.nvim_set_keymap
   local opts = { noremap = true, silent = true }
@@ -104,10 +104,10 @@ M.toggle_terminal = function(...)
   require('windex.terminal').toggle(...)
 end
 M.toggle_nvim_maximize = function()
-  require('windex.maximize').toggle_nvim()
+  require('windex.maximize').toggle('nvim')
 end
 M.toggle_maximize = function()
-  require('windex.maximize').toggle()
+  require('windex.maximize').toggle('both')
 end
 M.maximize_windows = function()
   require('windex.maximize').maximize()

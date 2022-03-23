@@ -17,14 +17,14 @@ M.toggle = function(command)
     if command ~= nil then
       vim.cmd('keepalt terminal ' .. command)
     elseif vim.g.term_bufnr == nil or vim.fn.bufname(vim.g.term_bufnr) == '' then
-      vim.cmd 'keepalt terminal'
+      vim.cmd('keepalt terminal')
     else
       vim.cmd('keepalt buffer ' .. vim.g.term_bufnr)
     end
     vim.opt_local.relativenumber = false
     vim.opt_local.number = false
     vim.opt_local.signcolumn = 'no'
-    vim.cmd 'startinsert'
+    vim.cmd('startinsert')
   end
 end
 
