@@ -8,18 +8,46 @@
 
 * Maximize the current nvim window completely without any of the ugly borders
   that other plugins create.
+
+  `lua require('windex').maximize_nvim_window()`
+
 * Maximize the current nvim window __and__ tmux pane for when you need something
   comletely fullscreen.
+
+  `lua require('windex').maximize_window()`
 
 ### Cleaner Window Movement
 
 * Treats tmux panes as nvim windows which allows for easy window/pane movement,
   with the same keymaps.
-* Save and quit the nvim window (or kill the tmux pane) in the selected direction.
+
+  `lua require('windex').switch_window(<direction>)`
+
+* Save and quit the nvim window, or kill the tmux pane, in the selected direction.
+
+  `lua require('windex').close_window(<direction>)`
+
+* Jump to the last nvim window or tmux pane.
+
+  `lua require('windex').close_window(<direction>)`
 
 ### Terminal Toggle
 
-* Toggle the (improved) native terminal which will open fullscreen.
+* Toggle the (improved) native terminal which will open fullscreen. Has an
+optional command argument to run a terminal command.
+
+  `lua require('windex').toggle_terminal(<command>)`
+
+  * Example keymap to open lazygit fullscreen:
+
+    ```lua
+    vim.api.nvim_set_keymap(
+      'n',
+      '<C-g>',
+      "<Cmd>lua require('windex').toggle_terminal('lazygit')<CR>",
+      { noremap = true, silent = true }
+    )
+    ```
 
 ## ⏱️ Performance Comparison
 
