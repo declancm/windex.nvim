@@ -31,7 +31,7 @@ Has weird thing in the top left where it didn't maximize properly and doesn't ma
 
 ### windex.nvim
 
-Perfectly maximizes the nvim window and tmux pane! 👑
+Perfectly maximizes the neovim window and tmux pane! 👑
 
 ![windex](https://user-images.githubusercontent.com/90937622/159694138-5b99ec1d-e860-42fb-9af6-ca23b98dda25.png)
 
@@ -86,7 +86,7 @@ use 'declancm/windex.nvim'
 
 ### Terminal Toggle
 
-* Toggle the (improved) native terminal which will open fullscreen.
+* Toggle the (improved) interactive native terminal.
 
   ```lua
   require('windex').toggle_terminal([{maximize} [, {command}]])
@@ -100,7 +100,8 @@ use 'declancm/windex.nvim'
     
     * 'both' - Maximize the neovim window and tmux pane (the default).
 
-  * The optional {command} argument can be passed a string to run in terminal.
+  * The optional {command} argument is a command to run in a non-interactive
+    terminal.
 
   * __Example:__ Custom keymap to open lazygit fullscreen.
 
@@ -154,7 +155,8 @@ keymap('n', '<Leader>xl', "<Cmd>lua require('windex').close_window('Right')<CR>"
 
 -- Toggle the terminal:
 keymap('n', '<C-Bslash>', "<Cmd>lua require('windex').toggle_terminal()<CR>", opts)
-keymap('t', '<C-n>', '<C-Bslash><C-N>', opts)
+keymap('t', '<C-Bslash>', "<Cmd>lua require('windex').toggle_terminal()<CR>", opts)
+keymap('t', '<C-n>', '<C-Bslash><C-n>', opts)
 ```
 
 _Note: The default keymap to toggle the terminal is CTRL-\\. To enter normal mode in

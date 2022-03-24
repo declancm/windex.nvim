@@ -41,7 +41,7 @@ M.setup = function(options)
   vim.cmd([[au TermClose * lua require('windex.maximize').restore()]])
   vim.cmd([[aug END]])
 
-  -- Previous window function autocmds.
+  -- Previous window autocmds.
   vim.cmd([[aug windex_previous]])
   vim.cmd([[au!]])
   vim.cmd([[au FocusGained * lua vim.g.__windex_previous = 'tmux']])

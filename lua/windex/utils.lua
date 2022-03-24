@@ -1,9 +1,11 @@
 local M = {}
 
 M.tmux_requirement_passed = function()
+  -- Check if command fails. If it fails, tmux is not installed.
   if os.execute('tmux -V') ~= 0 then
     return false
   end
+  -- Check if the version number is 1.8 or greater (the version that got resize-pane -Z).
   local exitStatus = os.execute([[
   #!/usr/bin/env bash
   (
@@ -19,7 +21,7 @@ M.tmux_requirement_passed = function()
 end
 
 M.tmux_maximized = function()
-  -- Compare pane size with window size.
+  -- Compare the size of the current tmux pane with the tmux window.
   local exitStatus = os.execute([[
   #!/usr/bin/env bash
   (
