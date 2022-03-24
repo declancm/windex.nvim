@@ -35,8 +35,6 @@ M.setup = function(options)
     return
   end
 
-  -- TODO: For neovim nightly users, use lua autocmds and vim.keymap.set.
-
   -- Restore windows when terminal is exited.
   vim.cmd([[aug windex_terminal]])
   vim.cmd([[au!]])
@@ -68,7 +66,11 @@ M.setup = function(options)
     keymap('t', '<C-Bslash>', "<Cmd>lua require('windex').toggle_terminal()<CR>", opts)
 
     -- Toggle maximizing the current window.
-    keymap('n', '<Leader>z', "<Cmd>lua require('windex').toggle_maximize()<CR>", opts)
+    if require('windex.utils').tmux_requirement_passed() == true then
+      keymap('n', '<Leader>z', "<Cmd>lua require('windex').toggle_maximize()<CR>", opts)
+    else
+      keymap('n', '<Leader>z', "<Cmd>lua require('windex').toggle_nvim_maximize()<CR>", opts)
+    end
 
     -- Switch to previous nvim window or tmux pane.
     keymap('n', '<Leader>;', "<Cmd>lua require('windex').previous_window()<CR>", opts)

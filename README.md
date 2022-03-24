@@ -6,54 +6,18 @@
 
 ### Maximize Current Window
 
-* Maximize the current nvim window completely without any of the ugly borders
-  that other plugins create.
-
-  `lua require('windex').maximize_nvim_window()`
-
-* Maximize the current nvim window __and__ tmux pane for when you need something
-  comletely fullscreen.
-
-  `lua require('windex').maximize_window()`
+* Toggle maximizing the current neovim window completely (without any of the ugly borders
+  that other plugins create) AND maximizing the current tmux pane.
 
 ### Cleaner Window Movement
 
-* Treats tmux panes as nvim windows which allows for easy window/pane movement,
-  with the same keymaps.
-
-  `lua require('windex').switch_window({direction})`
-
-* Save and quit the nvim window, or kill the tmux pane, in the selected direction.
-
-  `lua require('windex').close_window({direction})`
-
-* Jump to the last nvim window or tmux pane.
-
-  `lua require('windex').previous_window()`
+* Treats tmux panes as neovim windows which allows for easy window/pane movement.
+  Switch-to or close any nvim window/tmux pane.
 
 ### Terminal Toggle
 
-* Toggle the (improved) native terminal which will open fullscreen.
-
-  `lua require('windex').toggle_terminal([{maximize} [, {command}]])`
-
-  * The maximize argument can either be 'none', 'nvim', or 'both'. Respectively,
-    this either does no maximizing, maximizes the current nvim window, or
-    maximizes the nvim window and tmux pane when toggling the terminal. The
-    default is 'both'.
-
-  * Has an optional command argument to run a terminal command.
-
-  * Example keymap to open lazygit fullscreen:
-
-    ```lua
-    vim.api.nvim_set_keymap(
-      'n',
-      '<C-g>',
-      "<Cmd>lua require('windex').toggle_terminal('both','lazygit')<CR>",
-      { noremap = true, silent = true }
-    )
-    ```
+* Toggle the (improved) native terminal which will open fullscreen. _(See the
+  demo video at the bottom of the readme _👀_)_
 
 ## ⏱️ Performance Comparison
 
@@ -61,7 +25,7 @@ A comparison of vim-maximizer and windex.nvim with maximizing a nvim window and 
 
 ### vim-maximizer
 
-Has weird thing in the top left where it didn't maximize properly and doesn't maximize the tmux pane.
+Has weird thing in the top left where it didn't maximize properly and doesn't maximize the tmux pane. 🤢
 
 ![vim-maximizer](https://user-images.githubusercontent.com/90937622/159694125-322f371f-4334-4731-bf02-cfde05945654.png)
 
@@ -80,6 +44,59 @@ Install with your favourite plugin manager:
 ```lua
 use 'declancm/windex.nvim'
 ```
+
+## 🎉 Usage
+
+### Maximize Current Window
+
+* Maximize the current neovim window completely without any of the ugly borders
+  that other plugins create.
+
+  `lua require('windex').toggle_nvim_maximize()`
+
+* Maximize the current neovim window __AND__ tmux pane for when you need something
+  comletely fullscreen.
+
+  `lua require('windex').toggle_maximize()`
+
+### Cleaner Window Movement
+
+* Treats tmux panes as neovim windows which allows for easy window/pane movement,
+  with the same function.
+
+  `lua require('windex').switch_window({direction})`
+
+* Save and quit the neovim window, or kill the tmux pane, in the selected direction.
+
+  `lua require('windex').close_window({direction})`
+
+* Jump to the last neovim window or tmux pane.
+
+  `lua require('windex').previous_window()`
+
+### Terminal Toggle
+
+* Toggle the (improved) native terminal which will open fullscreen.
+
+  `lua require('windex').toggle_terminal([{maximize} [, {command}]])`
+
+  * The maximize argument can either be 'none', 'nvim', or 'both'. Respectively,
+    this either does no maximizing, maximizes the current nvim window, or
+    maximizes the neovim window and tmux pane when toggling the terminal. The
+    default is 'both'.
+
+  * Has an optional command argument to run a terminal command.
+
+  * Example keymap to open lazygit fullscreen:
+
+    ```lua
+    vim.api.nvim_set_keymap(
+      'n',
+      '<C-g>',
+      "<Cmd>lua require('windex').toggle_terminal('both','lazygit')<CR>",
+      { noremap = true, silent = true }
+    )
+    ```
 
 ## ⚙️ Configuration
 
@@ -102,6 +119,7 @@ local opts = { noremap = true, silent = true }
 local keymap = vim.api.nvim_set_keymap
 
 -- Toggle maximizing the current window:
+-- (If your system doesn't pass the tmux requirement, 'toggle_nvim_maximize()' will be used instead.)
 keymap('n', '<Leader>z', "<Cmd>lua require('windex').toggle_maximize()<CR>", opts)
 
 -- Switch to previous nvim window or tmux pane:
@@ -128,7 +146,7 @@ _Note: The default keymap to toggle the terminal is CTRL-\\. To enter normal mod
 terminal, the key combination is CTRL-\\ + CTRL-N which is no longer possible to 
 execute. This sequence is therefore remapped to CTRL-N when in the terminal._
 
-## 🎞️ Demo Video
+## 🎬 Demo Video
 
 ### Nvim Window / Tmux Pane Movement and Terminal Toggle
 

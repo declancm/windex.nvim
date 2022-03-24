@@ -1,14 +1,17 @@
 local M = {}
 
 M.tmux_requirement_passed = function()
-  local status = os.execute([[
+  if os.execute('tmux -V') ~= 0 then
+    return false
+  end
+  local exitStatus = os.execute([[
   #!/usr/bin/env bash
   (
     tmuxVersion=$(tmux -V | sed 's/[^0-9.]*//g')
     exit $(echo "$tmuxVersion >= 1.8" | bc -l)
   ) > /dev/null 2>&1
   ]])
-  if status == 0 then
+  if exitStatus == 0 then
     return false
   else
     return true
@@ -32,13 +35,11 @@ M.tmux_maximized = function()
     fi
   ) > /dev/null 2>&1
   ]])
-  local tmuxMaximized
   if exitStatus == 0 then
-    tmuxMaximized = true
+    return true
   else
-    tmuxMaximized = false
+    return false
   end
-  return tmuxMaximized
 end
 
 return M
