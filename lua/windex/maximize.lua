@@ -51,7 +51,9 @@ M.restore = function(maximizeOption)
     local savedPosition = vim.fn.getcurpos()
     vim.cmd('so ~/.cache/nvim/.maximize_session.vim')
     vim.fn.delete(vim.fn.getenv('HOME') .. '/.cache/nvim/.maximize_session.vim')
-    vim.cmd('e ' .. fileName)
+    if vim.fn.getreg('%') ~= fileName then
+      vim.cmd('e ' .. fileName)
+    end
     vim.fn.setpos('.', savedPosition)
   end
   vim.w.__windex_maximized = false

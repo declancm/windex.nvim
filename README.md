@@ -102,8 +102,7 @@ local opts = { noremap = true, silent = true }
 local keymap = vim.api.nvim_set_keymap
 
 -- Toggle maximizing the current window:
-keymap('n', '<Leader>z', "<Cmd>lua require('windex').toggle_nvim_maximize()<CR>", opts)
-keymap('n', '<Leader>Z', "<Cmd>lua require('windex').toggle_maximize()<CR>", opts)
+keymap('n', '<Leader>z', "<Cmd>lua require('windex').toggle_maximize()<CR>", opts)
 
 -- Switch to previous nvim window or tmux pane:
 keymap('n', '<Leader>;', "<Cmd>lua require('windex').previous_window()<CR>", opts)
