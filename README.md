@@ -92,12 +92,15 @@ use 'declancm/windex.nvim'
   require('windex').toggle_terminal([{maximize} [, {command}]])
   ```
 
-  * The maximize argument can either be 'none', 'nvim', or 'both'. Respectively,
-    this either does no maximizing, maximizes the current nvim window, or
-    maximizes the neovim window and tmux pane when toggling the terminal. The
-    default is 'both'.
+  * The {maximize} argument can either be:
+  
+    * 'none' - No maximizing,
+    
+    * 'nvim' - Maximize the neovim window,
+    
+    * 'both' - Maximize the neovim window and tmux pane (the default).
 
-  * Has an optional command argument to run a terminal command.
+  * The optional {command} argument can be passed a string to run in terminal.
 
   * __Example:__ Custom keymap to open lazygit fullscreen.
 
