@@ -47,9 +47,11 @@ M.restore = function(maximizeOption)
   end
   -- Restore nvim windows.
   if vim.fn.filereadable(vim.fn.getenv('HOME') .. '/.cache/nvim/.maximize_session.vim') == 1 then
+    local fileName = vim.fn.getreg('%')
     local savedPosition = vim.fn.getcurpos()
     vim.cmd('so ~/.cache/nvim/.maximize_session.vim')
     vim.fn.delete(vim.fn.getenv('HOME') .. '/.cache/nvim/.maximize_session.vim')
+    vim.cmd('e ' .. fileName)
     vim.fn.setpos('.', savedPosition)
   end
   vim.w.__windex_maximized = false
