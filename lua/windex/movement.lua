@@ -2,6 +2,9 @@ local M = {}
 
 -- Save and quit nvim window or kill tmux pane in the direction selected.
 M.close = function(direction)
+  if direction ~= 'Up' and direction ~= 'Down' and direction ~= 'Left' and direction ~= 'Right' then
+    return
+  end
   local previousWindow = vim.fn.winnr()
   if direction == 'Up' then
     vim.cmd('wincmd k')
@@ -14,56 +17,18 @@ M.close = function(direction)
   end
   local newWindow = vim.fn.winnr()
   if previousWindow == newWindow then
-    -- TODO: Convert this into a function.
-    if direction == 'Up' then
-      os.execute([[
+    os.execute([[
       #!/usr/bin/env bash
       (
         previousPane=$(tmux display-message -p '#{pane_id}')
-        tmux select-pane -U
-        newPane=$(tmux display-message -p '#{pane_id}')
-        if [ $previousPane -ne $newPane ]; then
-          kill-pane
+        # echo $previousPane
+        newPane=$(tmux select-pane -]] .. direction:sub(1, 1) .. [[; tmux display-message -p '#{pane_id}')
+        # echo $newPane
+        if [ $previousPane != $newPane ]; then
+          tmux kill-pane
         fi
-      ) > /dev/null 2>&1
+      )
       ]])
-    elseif direction == 'Down' then
-      os.execute([[
-      #!/usr/bin/env bash
-      (
-        previousPane=$(tmux display-message -p '#{pane_id}')
-        tmux select-pane -D
-        newPane=$(tmux display-message -p '#{pane_id}')
-        if [ $previousPane -ne $newPane ]; then
-          kill-pane
-        fi
-      ) > /dev/null 2>&1
-      ]])
-    elseif direction == 'Left' then
-      os.execute([[
-      #!/usr/bin/env bash
-      (
-        previousPane=$(tmux display-message -p '#{pane_id}')
-        tmux select-pane -L
-        newPane=$(tmux display-message -p '#{pane_id}')
-        if [ $previousPane -ne $newPane ]; then
-          kill-pane
-        fi
-      ) > /dev/null 2>&1
-      ]])
-    elseif direction == 'Right' then
-      os.execute([[
-      #!/usr/bin/env bash
-      (
-        previousPane=$(tmux display-message -p '#{pane_id}')
-        tmux select-pane -R
-        newPane=$(tmux display-message -p '#{pane_id}')
-        if [ $previousPane -ne $newPane ]; then
-          kill-pane
-        fi
-      ) > /dev/null 2>&1
-      ]])
-    end
   else
     vim.cmd('exit')
     -- vim.cmd [[exec (&modifiable && &modified) ? 'wq' : 'q']]
@@ -84,15 +49,7 @@ M.switch = function(direction)
   end
   local newWindow = vim.fn.winnr()
   if previousWindow == newWindow then
-    if direction == 'Up' then
-      os.execute('tmux select-pane -U > /dev/null 2>&1')
-    elseif direction == 'Down' then
-      os.execute('tmux select-pane -D > /dev/null 2>&1')
-    elseif direction == 'Left' then
-      os.execute('tmux select-pane -L > /dev/null 2>&1')
-    elseif direction == 'Right' then
-      os.execute('tmux select-pane -R > /dev/null 2>&1')
-    end
+    os.execute('tmux select-pane -' .. direction:sub(1, 1) .. ' > /dev/null 2>&1')
   end
 end
 
