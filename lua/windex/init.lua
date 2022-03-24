@@ -1,7 +1,7 @@
 local M = {}
 
 M.setup = function(options)
-  vim.g.__windex_setup_completed = 1
+  vim.g.__windex_loaded = 1
 
   -- Check if user is on Windows.
   if vim.fn.has('win32') == 1 then
@@ -72,8 +72,8 @@ M.setup = function(options)
       keymap('n', '<C-Bslash>', "<Cmd>lua require('windex').toggle_terminal()<CR>", opts)
       keymap('t', '<C-Bslash>', "<Cmd>lua require('windex').toggle_terminal()<CR>", opts)
     else
-      keymap('n', '<C-Bslash>', "<Cmd>lua require('windex').toggle_terminal('nvim')<CR>", opts)
-      keymap('t', '<C-Bslash>', "<Cmd>lua require('windex').toggle_terminal('nvim')<CR>", opts)
+      keymap('n', '<C-Bslash>', "<Cmd>lua require('windex').toggle_terminal('Nvim')<CR>", opts)
+      keymap('t', '<C-Bslash>', "<Cmd>lua require('windex').toggle_terminal('Nvim')<CR>", opts)
     end
 
     -- Toggle maximizing the current window.
@@ -118,10 +118,10 @@ M.toggle_terminal = function(...)
   require('windex.terminal').toggle(...)
 end
 M.toggle_nvim_maximize = function()
-  require('windex.maximize').toggle('nvim')
+  require('windex.maximize').toggle('Nvim')
 end
 M.toggle_maximize = function()
-  require('windex.maximize').toggle('both')
+  require('windex.maximize').toggle('Both')
 end
 M.maximize_windows = function()
   require('windex.maximize').maximize()

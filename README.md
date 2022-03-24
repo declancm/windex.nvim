@@ -94,11 +94,11 @@ use 'declancm/windex.nvim'
 
   * The {maximize} argument can either be:
   
-    * 'none' - No maximizing,
+    * 'None' - No maximizing,
     
-    * 'nvim' - Maximize the neovim window,
+    * 'Nvim' - Maximize the neovim window,
     
-    * 'both' - Maximize the neovim window and tmux pane (the default).
+    * 'All' - Maximize the neovim window and tmux pane (the default).
 
   * The optional {command} argument is a command to run in a non-interactive
     terminal.
@@ -109,7 +109,7 @@ use 'declancm/windex.nvim'
     vim.api.nvim_set_keymap(
       'n',
       '<C-g>',
-      "<Cmd>lua require('windex').toggle_terminal('both','lazygit')<CR>",
+      "<Cmd>lua require('windex').toggle_terminal('All','lazygit')<CR>",
       { noremap = true, silent = true }
     )
     ```
