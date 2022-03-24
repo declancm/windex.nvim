@@ -62,8 +62,13 @@ M.setup = function(options)
   if options.default_keymaps == true then
     -- Toggle the native terminal.
     keymap('t', '<C-n>', '<C-Bslash><C-N>', opts)
-    keymap('n', '<C-Bslash>', "<Cmd>lua require('windex').toggle_terminal()<CR>", opts)
-    keymap('t', '<C-Bslash>', "<Cmd>lua require('windex').toggle_terminal()<CR>", opts)
+    if require('windex.utils').tmux_requirement_passed() == true then
+      keymap('n', '<C-Bslash>', "<Cmd>lua require('windex').toggle_terminal()<CR>", opts)
+      keymap('t', '<C-Bslash>', "<Cmd>lua require('windex').toggle_terminal()<CR>", opts)
+    else
+      keymap('n', '<C-Bslash>', "<Cmd>lua require('windex').toggle_terminal('nvim')<CR>", opts)
+      keymap('t', '<C-Bslash>', "<Cmd>lua require('windex').toggle_terminal('nvim')<CR>", opts)
+    end
 
     -- Toggle maximizing the current window.
     if require('windex.utils').tmux_requirement_passed() == true then

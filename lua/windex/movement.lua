@@ -14,19 +14,57 @@ M.close = function(direction)
   end
   local newWindow = vim.fn.winnr()
   if previousWindow == newWindow then
+    -- TODO: Convert this into a function.
     if direction == 'Up' then
-      os.execute('tmux select-pane -U \\; kill-pane > /dev/null 2>&1')
+      os.execute([[
+      #!/usr/bin/env bash
+      (
+        previousPane=$(tmux display-message -p '#{pane_id}')
+        tmux select-pane -U
+        newPane=$(tmux display-message -p '#{pane_id}')
+        if [ $previousPane -ne $newPane ]; then
+          kill-pane
+        fi
+      ) > /dev/null 2>&1
+      ]])
     elseif direction == 'Down' then
-      os.execute('tmux select-pane -D \\; kill-pane > /dev/null 2>&1')
+      os.execute([[
+      #!/usr/bin/env bash
+      (
+        previousPane=$(tmux display-message -p '#{pane_id}')
+        tmux select-pane -D
+        newPane=$(tmux display-message -p '#{pane_id}')
+        if [ $previousPane -ne $newPane ]; then
+          kill-pane
+        fi
+      ) > /dev/null 2>&1
+      ]])
     elseif direction == 'Left' then
-      os.execute('tmux select-pane -L \\; kill-pane > /dev/null 2>&1')
+      os.execute([[
+      #!/usr/bin/env bash
+      (
+        previousPane=$(tmux display-message -p '#{pane_id}')
+        tmux select-pane -L
+        newPane=$(tmux display-message -p '#{pane_id}')
+        if [ $previousPane -ne $newPane ]; then
+          kill-pane
+        fi
+      ) > /dev/null 2>&1
+      ]])
     elseif direction == 'Right' then
-      os.execute('tmux select-pane -R \\; kill-pane > /dev/null 2>&1')
+      os.execute([[
+      #!/usr/bin/env bash
+      (
+        previousPane=$(tmux display-message -p '#{pane_id}')
+        tmux select-pane -R
+        newPane=$(tmux display-message -p '#{pane_id}')
+        if [ $previousPane -ne $newPane ]; then
+          kill-pane
+        fi
+      ) > /dev/null 2>&1
+      ]])
     end
   else
-    if previousWindow == newWindow then
-      return
-    end
     vim.cmd('exit')
     -- vim.cmd [[exec (&modifiable && &modified) ? 'wq' : 'q']]
   end
