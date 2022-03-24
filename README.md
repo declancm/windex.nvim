@@ -52,33 +52,45 @@ use 'declancm/windex.nvim'
 * Maximize the current neovim window completely without any of the ugly borders
   that other plugins create.
 
-  `lua require('windex').toggle_nvim_maximize()`
+  ```lua
+  require('windex').toggle_nvim_maximize()
+  ```
 
 * Maximize the current neovim window __AND__ tmux pane for when you need something
   comletely fullscreen.
 
-  `lua require('windex').toggle_maximize()`
+  ```lua
+  require('windex').toggle_maximize()
+  ```
 
 ### Cleaner Window Movement
 
 * Treats tmux panes as neovim windows which allows for easy window/pane movement,
   with the same function.
 
-  `lua require('windex').switch_window({direction})`
+  ```lua
+  require('windex').switch_window({direction})
+  ```
 
 * Save and quit the neovim window, or kill the tmux pane, in the selected direction.
 
-  `lua require('windex').close_window({direction})`
+  ```lua
+  require('windex').close_window({direction})
+  ```
 
 * Jump to the last neovim window or tmux pane.
 
-  `lua require('windex').previous_window()`
+  ```lua
+  require('windex').previous_window()
+  ```
 
 ### Terminal Toggle
 
 * Toggle the (improved) native terminal which will open fullscreen.
 
-  `lua require('windex').toggle_terminal([{maximize} [, {command}]])`
+  ```lua
+  require('windex').toggle_terminal([{maximize} [, {command}]])
+  ```
 
   * The maximize argument can either be 'none', 'nvim', or 'both'. Respectively,
     this either does no maximizing, maximizes the current nvim window, or
@@ -87,7 +99,7 @@ use 'declancm/windex.nvim'
 
   * Has an optional command argument to run a terminal command.
 
-  * Example keymap to open lazygit fullscreen:
+  * __Example:__ Custom keymap to open lazygit fullscreen.
 
     ```lua
     vim.api.nvim_set_keymap(
