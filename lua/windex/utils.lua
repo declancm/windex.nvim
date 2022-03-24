@@ -44,23 +44,4 @@ M.tmux_maximized = function()
   end
 end
 
-M.multiple_tmux_panes = function()
-  local exitStatus = os.execute([[
-  #!/usr/bin/env bash
-  (
-    if [ $(tmux display-message -p '#{window_panes}') -gt 1 ]; then
-      exit 0
-    else
-      exit 1
-    fi
-  ) > /dev/null 2>&1
-  ]])
-  if exitStatus == 0 then
-    return true
-  else
-    return false
-  end
-  return exitStatus
-end
-
 return M

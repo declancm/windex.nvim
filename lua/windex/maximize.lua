@@ -5,9 +5,11 @@ M.toggle = function(maximizeOption)
   maximizeOption = maximizeOption or 'both'
   if maximizeOption == 'both' then
     if require('windex.utils').tmux_requirement_passed() == false then
-      vim.cmd([[echohl ErrorMsg]])
-      vim.cmd([[echo "Error: Tmux 1.8+ is required. Use 'maximize_nvim_window()' instead or install/update Tmux."]])
-      vim.cmd([[echohl None]])
+      vim.cmd([[
+      echohl ErrorMsg
+      echo "Error: Tmux 1.8+ is required. Use 'maximize_nvim_window()' instead or install/update Tmux."
+      echohl None
+      ]])
       return
     end
   end

@@ -36,24 +36,30 @@ M.setup = function(options)
   end
 
   -- Restore windows when terminal is exited.
-  vim.cmd([[aug windex_terminal]])
-  vim.cmd([[au!]])
-  vim.cmd([[au TermClose * lua require('windex.maximize').restore()]])
-  vim.cmd([[aug END]])
+  vim.cmd([[
+  aug windex_terminal
+  au!
+  au TermClose * lua require('windex.maximize').restore()
+  aug END
+  ]])
 
   -- Previous window autocmds.
-  vim.cmd([[aug windex_previous]])
-  vim.cmd([[au!]])
-  vim.cmd([[au FocusGained * lua vim.g.__windex_previous = 'tmux']])
-  vim.cmd([[au WinLeave * lua vim.g.__windex_previous = 'nvim']])
-  vim.cmd([[aug END]])
+  vim.cmd([[
+  aug windex_previous
+  au!
+  au FocusGained * lua vim.g.__windex_previous = 'tmux'
+  au WinLeave * lua vim.g.__windex_previous = 'nvim'
+  aug END
+  ]])
 
   -- Delete session file from cache.
-  vim.cmd([[aug windex_maximize]])
-  vim.cmd([[au!]])
-  vim.cmd([[au VimEnter * call delete(getenv('HOME') . '/.cache/nvim/.maximize_session.vim')]])
-  vim.cmd([[au VimLeave * call delete(getenv('HOME') . '/.cache/nvim/.maximize_session.vim')]])
-  vim.cmd([[aug END]])
+  vim.cmd([[
+  aug windex_maximize
+  au!
+  au VimEnter * call delete(getenv('HOME') . '/.cache/nvim/.maximize_session.vim')
+  au VimLeave * call delete(getenv('HOME') . '/.cache/nvim/.maximize_session.vim')
+  aug END
+  ]])
 
   local keymap = vim.api.nvim_set_keymap
   local opts = { noremap = true, silent = true }
