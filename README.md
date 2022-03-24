@@ -21,11 +21,11 @@
 * Treats tmux panes as nvim windows which allows for easy window/pane movement,
   with the same keymaps.
 
-  `lua require('windex').switch_window(<direction>)`
+  `lua require('windex').switch_window({direction})`
 
 * Save and quit the nvim window, or kill the tmux pane, in the selected direction.
 
-  `lua require('windex').close_window(<direction>)`
+  `lua require('windex').close_window({direction})`
 
 * Jump to the last nvim window or tmux pane.
 
@@ -33,10 +33,16 @@
 
 ### Terminal Toggle
 
-* Toggle the (improved) native terminal which will open fullscreen. Has an
-optional command argument to run a terminal command.
+* Toggle the (improved) native terminal which will open fullscreen.
 
-  `lua require('windex').toggle_terminal(<command>)`
+  `lua require('windex').toggle_terminal([{maximize} [, {command}]])`
+
+  * The maximize argument can either be 'none', 'nvim', or 'both'. Respectively,
+    this either does no maximizing, maximizes the current nvim window, or
+    maximizes the nvim window and tmux pane when toggling the terminal. The
+    default is 'both'.
+
+  * Has an optional command argument to run a terminal command.
 
   * Example keymap to open lazygit fullscreen:
 
@@ -44,7 +50,7 @@ optional command argument to run a terminal command.
     vim.api.nvim_set_keymap(
       'n',
       '<C-g>',
-      "<Cmd>lua require('windex').toggle_terminal('lazygit')<CR>",
+      "<Cmd>lua require('windex').toggle_terminal('both','lazygit')<CR>",
       { noremap = true, silent = true }
     )
     ```
@@ -121,7 +127,7 @@ keymap('t', '<C-n>', '<C-Bslash><C-N>', opts)
 
 _Note: The default keymap to toggle the terminal is CTRL-\\. To enter normal mode in
 terminal, the key combination is CTRL-\\ + CTRL-N which is no longer possible to 
-execute. This sequence is remapped to CTRL-N by default._
+execute. This sequence is therefore remapped to CTRL-N when in the terminal._
 
 ## 🎞️ Demo Video
 

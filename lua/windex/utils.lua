@@ -5,7 +5,7 @@ M.tmux_requirement_passed = function()
   #!/usr/bin/env bash
   (
     tmuxVersion=$(tmux -V | sed 's/[^0-9.]*//g')
-    exit $(echo "$tmuxVersion > 1.8" | bc -l)
+    exit $(echo "$tmuxVersion >= 1.8" | bc -l)
   ) > /dev/null 2>&1
   ]])
   if status == 0 then

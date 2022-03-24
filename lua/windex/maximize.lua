@@ -1,24 +1,24 @@
 local M = {}
 
 -- Toggle maximizing the current nvim window and tmux pane.
-M.toggle = function(option)
-  option = option or 'both'
-  if option ~= 'nvim' then
+M.toggle = function(maximizeOption)
+  maximizeOption = maximizeOption or 'both'
+  if maximizeOption == 'both' then
     if require('windex.utils').tmux_requirement_passed() == false then
       vim.cmd([[echohl ErrorMsg | echo "Error: Tmux 1.8 or newer is required." | echohl None]])
       return
     end
   end
   if not vim.w.__windex_maximized then
-    require('windex.maximize').maximize(option)
+    require('windex.maximize').maximize(maximizeOption)
   else
-    require('windex.maximize').restore(option)
+    require('windex.maximize').restore(maximizeOption)
   end
 end
 
 -- Maximize the current nvim window and tmux pane.
-M.maximize = function(option)
-  option = option or 'both'
+M.maximize = function(maximizeOption)
+  maximizeOption = maximizeOption or 'both'
   -- Maximize nvim window.
   if vim.fn.winnr('$') ~= 1 then
     local savedOptions = vim.opt.sessionoptions
@@ -28,7 +28,7 @@ M.maximize = function(option)
     vim.cmd('only')
   end
   -- Maximize tmux pane.
-  if option ~= 'nvim' then
+  if maximizeOption ~= 'nvim' then
     if require('windex.utils').tmux_maximized() == false then
       os.execute('tmux resize-pane -Z > /dev/null 2>&1')
     end
@@ -37,10 +37,10 @@ M.maximize = function(option)
 end
 
 -- Restore the nvim windows and tmux panes.
-M.restore = function(option)
-  option = option or 'both'
+M.restore = function(maximizeOption)
+  maximizeOption = maximizeOption or 'both'
   -- Restore tmux panes.
-  if option ~= 'nvim' then
+  if maximizeOption == 'both' then
     if require('windex.utils').tmux_maximized() == true then
       os.execute('tmux resize-pane -Z > /dev/null 2>&1')
     end

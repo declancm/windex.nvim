@@ -35,6 +35,8 @@ M.setup = function(options)
     return
   end
 
+  -- TODO: For neovim nightly users, use lua autocmds and vim.keymap.set.
+
   -- Restore windows when terminal is exited.
   vim.cmd([[aug windex_terminal]])
   vim.cmd([[au!]])

@@ -1,7 +1,11 @@
 local M = {}
 
 -- Toggle the native terminal.
-M.toggle = function(command)
+M.toggle = function(maximizeOption, command)
+  maximizeOption = maximizeOption or 'both'
+  if maximizeOption == '' then
+    maximizeOption = 'both'
+  end
   if vim.bo.buftype == 'terminal' then
     vim.g.term_bufnr = vim.fn.bufnr()
     if vim.g.term_prev == nil or vim.fn.bufname(vim.g.term_prev) == '' then
@@ -10,9 +14,13 @@ M.toggle = function(command)
     else
       vim.cmd('keepalt buffer ' .. vim.g.term_prev)
     end
-    require('windex.maximize').restore()
+    if maximizeOption ~= 'none' then
+      require('windex.maximize').restore(maximizeOption)
+    end
   else
-    require('windex.maximize').maximize()
+    if maximizeOption ~= 'none' then
+      require('windex.maximize').maximize(maximizeOption)
+    end
     vim.g.term_prev = vim.fn.bufnr()
     if command ~= nil then
       vim.cmd('keepalt terminal ' .. command)
