@@ -121,7 +121,7 @@ M.toggle_nvim_maximize = function()
   require('windex.maximize').toggle('Nvim')
 end
 M.toggle_maximize = function()
-  require('windex.maximize').toggle('Both')
+  require('windex.maximize').toggle('All')
 end
 M.maximize_windows = function()
   require('windex.maximize').maximize()
