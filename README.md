@@ -2,7 +2,7 @@
 
 🧼 __A neovim plugin for cleeean neovim window and tmux pane functions.__ 🧼
 
-🌈 __Works without tmux too!__ 🌈
+Works with or without tmux!
 
 ## ✨ Features
 
@@ -17,11 +17,12 @@
 ### Cleaner Window Movement
 
 * Treats tmux panes as neovim windows which allows for easy window/pane movement.
-* Use `<leader>{motion}` to swith to any window or tmux pane in the direction.
-* Use `<leader>x{motion}` to save and quit the window or kill the tmux pane in
-  the direction.
+* Use `<leader>{motion}` to swith to the window (or tmux pane) in the specified 
+  direction.
+* Use `<leader>x{motion}` to save and quit the window (or kill the tmux pane) in
+  the specified direction.
 
-_Note: The {motion} keys by default are h, j, k and l, but can be interchanged
+_Note: The {motion} keys by default are h, j, k and l, but can be replaced
   with the arrow keys. See 'Configuration' for details._
 
 ### Terminal Toggle
@@ -104,7 +105,7 @@ _Note: The default keymap to toggle the terminal is CTRL-\\. To enter normal mod
 terminal, the key combination is CTRL-\\ + CTRL-N which is no longer possible to 
 execute. This sequence is therefore remapped to CTRL-N when in the terminal._
 
-## 🎉 Usage
+## ℹ️ Usage
 
 _Note: Check the default keymaps on how to implement the functions in keymaps._
 

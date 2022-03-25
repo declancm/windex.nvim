@@ -70,6 +70,11 @@ M.restore = function(maximizeOption)
   end
   -- Restore nvim windows.
   if vim.fn.filereadable(vim.fn.getenv('HOME') .. '/.cache/nvim/.maximize_session.vim') == 1 then
+    -- Save buffers if modified.
+    if vim.bo.modified then
+      vim.cmd('wall')
+    end
+    -- Source the saved session.
     local fileName = vim.fn.getreg('%')
     local savedPosition = vim.fn.getcurpos()
     vim.cmd('so ~/.cache/nvim/.maximize_session.vim')
