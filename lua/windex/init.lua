@@ -64,20 +64,22 @@ M.setup = function(options)
   local keymap = vim.api.nvim_set_keymap
   local opts = { noremap = true, silent = true }
 
+  local tmuxRequirementPassed = require('windex.utils').tmux_requirement_passed()
+
   -- Keymaps:
   if options.default_keymaps == true then
     -- Toggle the native terminal.
     keymap('t', '<C-n>', '<C-Bslash><C-N>', opts)
-    if require('windex.utils').tmux_requirement_passed() == true then
+    if tmuxRequirementPassed then
       keymap('n', '<C-Bslash>', "<Cmd>lua require('windex').toggle_terminal()<CR>", opts)
       keymap('t', '<C-Bslash>', "<Cmd>lua require('windex').toggle_terminal()<CR>", opts)
     else
-      keymap('n', '<C-Bslash>', "<Cmd>lua require('windex').toggle_terminal('Nvim')<CR>", opts)
-      keymap('t', '<C-Bslash>', "<Cmd>lua require('windex').toggle_terminal('Nvim')<CR>", opts)
+      keymap('n', '<C-Bslash>', "<Cmd>lua require('windex').toggle_terminal('nvim')<CR>", opts)
+      keymap('t', '<C-Bslash>', "<Cmd>lua require('windex').toggle_terminal('nvim')<CR>", opts)
     end
 
     -- Toggle maximizing the current window.
-    if require('windex.utils').tmux_requirement_passed() == true then
+    if tmuxRequirementPassed then
       keymap('n', '<Leader>z', "<Cmd>lua require('windex').toggle_maximize()<CR>", opts)
     else
       keymap('n', '<Leader>z', "<Cmd>lua require('windex').toggle_nvim_maximize()<CR>", opts)
@@ -88,28 +90,28 @@ M.setup = function(options)
 
     if options.arrow_keys == false then
       -- Move between nvim windows and tmux panes.
-      keymap('n', '<Leader>k', "<Cmd>lua require('windex').switch_window('Up')<CR>", opts)
-      keymap('n', '<Leader>j', "<Cmd>lua require('windex').switch_window('Down')<CR>", opts)
-      keymap('n', '<Leader>h', "<Cmd>lua require('windex').switch_window('Left')<CR>", opts)
-      keymap('n', '<Leader>l', "<Cmd>lua require('windex').switch_window('Right')<CR>", opts)
+      keymap('n', '<Leader>k', "<Cmd>lua require('windex').switch_window('up')<CR>", opts)
+      keymap('n', '<Leader>j', "<Cmd>lua require('windex').switch_window('down')<CR>", opts)
+      keymap('n', '<Leader>h', "<Cmd>lua require('windex').switch_window('left')<CR>", opts)
+      keymap('n', '<Leader>l', "<Cmd>lua require('windex').switch_window('right')<CR>", opts)
 
       -- Save and close the window in the direction selected.
-      keymap('n', '<Leader>xk', "<Cmd>lua require('windex').close_window('Up')<CR>", opts)
-      keymap('n', '<Leader>xj', "<Cmd>lua require('windex').close_window('Down')<CR>", opts)
-      keymap('n', '<Leader>xh', "<Cmd>lua require('windex').close_window('Left')<CR>", opts)
-      keymap('n', '<Leader>xl', "<Cmd>lua require('windex').close_window('Right')<CR>", opts)
+      keymap('n', '<Leader>xk', "<Cmd>lua require('windex').close_window('up')<CR>", opts)
+      keymap('n', '<Leader>xj', "<Cmd>lua require('windex').close_window('down')<CR>", opts)
+      keymap('n', '<Leader>xh', "<Cmd>lua require('windex').close_window('left')<CR>", opts)
+      keymap('n', '<Leader>xl', "<Cmd>lua require('windex').close_window('right')<CR>", opts)
     else
       -- Move between nvim windows and tmux panes.
-      keymap('n', '<Leader><Up>', "<Cmd>lua require('windex').switch_window('Up')<CR>", opts)
-      keymap('n', '<Leader><Down>', "<Cmd>lua require('windex').switch_window('Down')<CR>", opts)
-      keymap('n', '<Leader><Left>', "<Cmd>lua require('windex').switch_window('Left')<CR>", opts)
-      keymap('n', '<Leader><Right>', "<Cmd>lua require('windex').switch_window('Right')<CR>", opts)
+      keymap('n', '<Leader><Up>', "<Cmd>lua require('windex').switch_window('up')<CR>", opts)
+      keymap('n', '<Leader><Down>', "<Cmd>lua require('windex').switch_window('down')<CR>", opts)
+      keymap('n', '<Leader><Left>', "<Cmd>lua require('windex').switch_window('left')<CR>", opts)
+      keymap('n', '<Leader><Right>', "<Cmd>lua require('windex').switch_window('right')<CR>", opts)
 
       -- Save and close the window in the direction selected.
-      keymap('n', '<Leader>x<Up>', "<Cmd>lua require('windex').close_window('Up')<CR>", opts)
-      keymap('n', '<Leader>x<Down>', "<Cmd>lua require('windex').close_window('Down')<CR>", opts)
-      keymap('n', '<Leader>x<Left>', "<Cmd>lua require('windex').close_window('Left')<CR>", opts)
-      keymap('n', '<Leader>x<Right>', "<Cmd>lua require('windex').close_window('Right')<CR>", opts)
+      keymap('n', '<Leader>x<Up>', "<Cmd>lua require('windex').close_window('up')<CR>", opts)
+      keymap('n', '<Leader>x<Down>', "<Cmd>lua require('windex').close_window('down')<CR>", opts)
+      keymap('n', '<Leader>x<Left>', "<Cmd>lua require('windex').close_window('left')<CR>", opts)
+      keymap('n', '<Leader>x<Right>', "<Cmd>lua require('windex').close_window('right')<CR>", opts)
     end
   end
 end
@@ -118,10 +120,10 @@ M.toggle_terminal = function(...)
   require('windex.terminal').toggle(...)
 end
 M.toggle_nvim_maximize = function()
-  require('windex.maximize').toggle('Nvim')
+  require('windex.maximize').toggle('nvim')
 end
 M.toggle_maximize = function()
-  require('windex.maximize').toggle('All')
+  require('windex.maximize').toggle('all')
 end
 M.maximize_windows = function()
   require('windex.maximize').maximize()
@@ -138,8 +140,8 @@ end
 M.previous_window = function()
   require('windex.movement').previous()
 end
-M.create_tmux_pane = function(...)
-  require('windex.movement').create_tmux_pane(...)
+M.create_pane = function(...)
+  require('windex.movement').create_pane(...)
 end
 
 return M

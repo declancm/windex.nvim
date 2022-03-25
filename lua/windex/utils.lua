@@ -44,4 +44,19 @@ M.tmux_maximized = function()
   end
 end
 
+M.argument_is_valid = function(argument, optionalValues)
+  local argumentValid = false
+  for _, value in pairs(optionalValues) do
+    if argument == value then
+      argumentValid = true
+      break
+    end
+  end
+  if not argumentValid then
+    vim.cmd([[echohl ErrorMsg | echo "Error: Not a valid argument." | echohl None]])
+    return false
+  end
+  return true
+end
+
 return M

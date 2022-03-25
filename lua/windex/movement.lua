@@ -2,19 +2,24 @@ local M = {}
 
 -- Save and quit nvim window or kill tmux pane in the direction selected.
 M.close = function(direction)
-  if direction ~= 'Up' and direction ~= 'Down' and direction ~= 'Left' and direction ~= 'Right' then
-    vim.cmd([[echohl ErrorMsg | echo "Error: Not a valid argument." | echohl None]])
+  local directionValues = { 'up', 'down', 'left', 'right', 'Up', 'Down', 'Left', 'Right' }
+  if not require('windex.utils').argument_is_valid(direction, directionValues) then
     return
   end
   local previousWindow = vim.fn.winnr()
-  if direction == 'Up' then
+  local paneDirection
+  if direction == 'up' or direction == 'Up' then
     vim.cmd('wincmd k')
-  elseif direction == 'Down' then
+    paneDirection = 'U'
+  elseif direction == 'down' or direction == 'Down' then
     vim.cmd('wincmd j')
-  elseif direction == 'Left' then
+    paneDirection = 'D'
+  elseif direction == 'left' or direction == 'Left' then
     vim.cmd('wincmd h')
-  elseif direction == 'Right' then
+    paneDirection = 'L'
+  else
     vim.cmd('wincmd l')
+    paneDirection = 'R'
   end
   local newWindow = vim.fn.winnr()
   if previousWindow == newWindow then
@@ -22,7 +27,7 @@ M.close = function(direction)
       #!/usr/bin/env bash
       (
         previousPane=$(tmux display-message -p '#{pane_id}')
-        newPane=$(tmux select-pane -]] .. direction:sub(1, 1) .. [[; tmux display-message -p '#{pane_id}')
+        newPane=$(tmux select-pane -]] .. paneDirection .. [[; tmux display-message -p '#{pane_id}')
         if [ $previousPane != $newPane ]; then
           tmux kill-pane
         fi
@@ -36,23 +41,28 @@ end
 
 -- Move between nvim windows and tmux panes.
 M.switch = function(direction)
-  if direction ~= 'Up' and direction ~= 'Down' and direction ~= 'Left' and direction ~= 'Right' then
-    vim.cmd([[echohl ErrorMsg | echo "Error: Not a valid argument." | echohl None]])
+  local directionValues = { 'up', 'down', 'left', 'right', 'Up', 'Down', 'Left', 'Right' }
+  if not require('windex.utils').argument_is_valid(direction, directionValues) then
     return
   end
   local previousWindow = vim.fn.winnr()
-  if direction == 'Up' then
+  local paneDirection
+  if direction == 'up' or direction == 'up' then
     vim.cmd('wincmd k')
-  elseif direction == 'Down' then
+    paneDirection = 'U'
+  elseif direction == 'down' or direction == 'Down' then
     vim.cmd('wincmd j')
-  elseif direction == 'Left' then
+    paneDirection = 'D'
+  elseif direction == 'left' or direction == 'Left' then
     vim.cmd('wincmd h')
-  elseif direction == 'Right' then
+    paneDirection = 'L'
+  else
     vim.cmd('wincmd l')
+    paneDirection = 'R'
   end
   local newWindow = vim.fn.winnr()
   if previousWindow == newWindow then
-    os.execute('tmux select-pane -' .. direction:sub(1, 1) .. ' > /dev/null 2>&1')
+    os.execute('tmux select-pane -' .. paneDirection .. ' > /dev/null 2>&1')
   end
 end
 
@@ -74,10 +84,10 @@ M.previous = function()
 end
 
 -- Create a tmux pane.
-M.create_tmux_pane = function(direction)
-  if direction == 'Vertical' then
+M.create_pane = function(direction)
+  if direction == 'vertical' or direction == 'Vertical' then
     os.execute("tmux split-window -h -c '#{pane_current_path}'")
-  elseif direction == 'Horizontal' then
+  elseif direction == 'horizontal' or direction == 'Horizontal' then
     os.execute("tmux split-window -v -c '#{pane_current_path}'")
   else
     vim.cmd([[echohl ErrorMsg | echo "Error: Not a valid argument." | echohl None]])
