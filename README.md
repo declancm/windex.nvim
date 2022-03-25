@@ -1,8 +1,8 @@
 # windex.nvim
 
-🧼 __A neovim plugin for cleeean nvim window and tmux pane functions.__ 🧼
+🧼 __A neovim plugin for cleeean neovim window and tmux pane functions.__ 🧼
 
-Works with or without Tmux :)
+🌈 __Works without tmux too!__ 🌈
 
 ## ✨ Features
 
@@ -54,6 +54,55 @@ Install with your favourite plugin manager:
 ```lua
 use 'declancm/windex.nvim'
 ```
+
+## ⚙️ Configuration
+
+A settings table can be passed into the setup function for custom options.
+
+The default settings are:
+
+```lua
+require('cinnamon').setup {
+  default_keymaps = true, -- Enable default keymaps.
+  arrow_keys = false,     -- Default keymaps use arrow keys instead of 'h,j,k,l'.
+  disable = false,        -- Disable the plugin.
+}
+```
+
+## ⌨️ Default Keymaps
+
+```lua
+local opts = { noremap = true, silent = true }
+local keymap = vim.api.nvim_set_keymap
+
+-- Toggle maximizing the current window:
+-- (If your system doesn't pass the tmux requirement, 'toggle_nvim_maximize()' will be used instead.)
+keymap('n', '<Leader>z', "<Cmd>lua require('windex').toggle_maximize()<CR>", opts)
+
+-- Switch to previous nvim window or tmux pane:
+keymap('n', '<Leader>;', "<Cmd>lua require('windex').previous_window()<CR>", opts)
+
+-- Move between nvim windows and tmux panes:
+keymap('n', '<Leader>k', "<Cmd>lua require('windex').switch_window('up')<CR>", opts)
+keymap('n', '<Leader>j', "<Cmd>lua require('windex').switch_window('down')<CR>", opts)
+keymap('n', '<Leader>h', "<Cmd>lua require('windex').switch_window('left')<CR>", opts)
+keymap('n', '<Leader>l', "<Cmd>lua require('windex').switch_window('right')<CR>", opts)
+
+-- Save and close the nvim window or kill the tmux pane in the direction selected:
+keymap('n', '<Leader>xk', "<Cmd>lua require('windex').close_window('up')<CR>", opts)
+keymap('n', '<Leader>xj', "<Cmd>lua require('windex').close_window('down')<CR>", opts)
+keymap('n', '<Leader>xh', "<Cmd>lua require('windex').close_window('left')<CR>", opts)
+keymap('n', '<Leader>xl', "<Cmd>lua require('windex').close_window('right')<CR>", opts)
+
+-- Toggle the terminal:
+keymap('n', '<C-Bslash>', "<Cmd>lua require('windex').toggle_terminal()<CR>", opts)
+keymap('t', '<C-Bslash>', "<Cmd>lua require('windex').toggle_terminal()<CR>", opts)
+keymap('t', '<C-n>', '<C-Bslash><C-n>', opts)
+```
+
+_Note: The default keymap to toggle the terminal is CTRL-\\. To enter normal mode in
+terminal, the key combination is CTRL-\\ + CTRL-N which is no longer possible to 
+execute. This sequence is therefore remapped to CTRL-N when in the terminal._
 
 ## 🎉 Usage
 
@@ -133,55 +182,6 @@ _Note: Check the default keymaps on how to implement the functions in keymaps._
       { noremap = true, silent = true }
     )
     ```
-
-## ⚙️ Configuration
-
-A settings table can be passed into the setup function for custom options.
-
-The default settings are:
-
-```lua
-require('cinnamon').setup {
-  default_keymaps = true, -- Enable default keymaps.
-  arrow_keys = false,     -- Default keymaps use arrow keys instead of 'h,j,k,l'.
-  disable = false,        -- Disable the plugin.
-}
-```
-
-## ⌨️ Default Keymaps
-
-```lua
-local opts = { noremap = true, silent = true }
-local keymap = vim.api.nvim_set_keymap
-
--- Toggle maximizing the current window:
--- (If your system doesn't pass the tmux requirement, 'toggle_nvim_maximize()' will be used instead.)
-keymap('n', '<Leader>z', "<Cmd>lua require('windex').toggle_maximize()<CR>", opts)
-
--- Switch to previous nvim window or tmux pane:
-keymap('n', '<Leader>;', "<Cmd>lua require('windex').previous_window()<CR>", opts)
-
--- Move between nvim windows and tmux panes:
-keymap('n', '<Leader>k', "<Cmd>lua require('windex').switch_window('up')<CR>", opts)
-keymap('n', '<Leader>j', "<Cmd>lua require('windex').switch_window('down')<CR>", opts)
-keymap('n', '<Leader>h', "<Cmd>lua require('windex').switch_window('left')<CR>", opts)
-keymap('n', '<Leader>l', "<Cmd>lua require('windex').switch_window('right')<CR>", opts)
-
--- Save and close the nvim window or kill the tmux pane in the direction selected:
-keymap('n', '<Leader>xk', "<Cmd>lua require('windex').close_window('up')<CR>", opts)
-keymap('n', '<Leader>xj', "<Cmd>lua require('windex').close_window('down')<CR>", opts)
-keymap('n', '<Leader>xh', "<Cmd>lua require('windex').close_window('left')<CR>", opts)
-keymap('n', '<Leader>xl', "<Cmd>lua require('windex').close_window('right')<CR>", opts)
-
--- Toggle the terminal:
-keymap('n', '<C-Bslash>', "<Cmd>lua require('windex').toggle_terminal()<CR>", opts)
-keymap('t', '<C-Bslash>', "<Cmd>lua require('windex').toggle_terminal()<CR>", opts)
-keymap('t', '<C-n>', '<C-Bslash><C-n>', opts)
-```
-
-_Note: The default keymap to toggle the terminal is CTRL-\\. To enter normal mode in
-terminal, the key combination is CTRL-\\ + CTRL-N which is no longer possible to 
-execute. This sequence is therefore remapped to CTRL-N when in the terminal._
 
 ## 🎬 Demo Video
 
