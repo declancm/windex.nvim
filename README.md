@@ -21,6 +21,7 @@ Works with or without tmux!
   direction.
 * Use `<leader>x{motion}` to save and quit the window (or kill the tmux pane) in
   the specified direction.
+* Use `<leader>;` to jump to previous window (or tmux pane).
 
 _Note: The {motion} keys by default are h, j, k and l, but can be replaced
   with the arrow keys. See 'Configuration' for details._
