@@ -5,7 +5,7 @@ M.tmux_requirement_passed = function()
   if os.execute('tmux -V') ~= 0 then
     return false
   end
-  -- Check if the version number is 1.8 or greater (the version that got resize-pane -Z).
+  -- Check if the version number is 1.8 or greater (for 'resize-pane -Z').
   local exitStatus = os.execute([[
   #!/usr/bin/env bash
   (

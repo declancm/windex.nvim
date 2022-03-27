@@ -23,7 +23,8 @@ M.close = function(direction)
   end
   local newWindow = vim.fn.winnr()
   if previousWindow == newWindow then
-    os.execute([[
+    if require('windex.utils').tmux_requirement_passed() then
+      os.execute([[
       #!/usr/bin/env bash
       (
         previousPane=$(tmux display-message -p '#{pane_id}')
@@ -33,6 +34,7 @@ M.close = function(direction)
         fi
       ) > /dev/null 2>&1
       ]])
+    end
   else
     vim.cmd('exit')
     -- vim.cmd [[exec (&modifiable && &modified) ? 'wq' : 'q']]

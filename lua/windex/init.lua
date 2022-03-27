@@ -1,7 +1,7 @@
 local M = {}
 
 M.setup = function(options)
-  vim.g.__windex_loaded = 1
+  vim.g.__windex_setup_loaded = 1
 
   -- Check if user is on Windows.
   if vim.fn.has('win32') == 1 then
@@ -68,8 +68,10 @@ M.setup = function(options)
 
   -- Keymaps:
   if options.default_keymaps == true then
-    -- Toggle the native terminal.
+    -- Enter normal mode in terminal.
     keymap('t', '<C-n>', '<C-Bslash><C-N>', opts)
+
+    -- Toggle the native terminal.
     if tmuxRequirementPassed then
       keymap('n', '<C-Bslash>', "<Cmd>lua require('windex').toggle_terminal()<CR>", opts)
       keymap('t', '<C-Bslash>', "<Cmd>lua require('windex').toggle_terminal()<CR>", opts)
@@ -125,8 +127,8 @@ end
 M.toggle_maximize = function()
   require('windex.maximize').toggle('all')
 end
-M.maximize_windows = function()
-  require('windex.maximize').maximize()
+M.maximize_windows = function(...)
+  require('windex.maximize').maximize(...)
 end
 M.restore_windows = function()
   require('windex.maximize').restore()
