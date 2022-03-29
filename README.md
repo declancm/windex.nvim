@@ -68,6 +68,7 @@ require('cinnamon').setup {
   default_keymaps = true, -- Enable default keymaps.
   arrow_keys = false,     -- Default keymaps use arrow keys instead of 'h,j,k,l'.
   disable = false,        -- Disable the plugin.
+  numbered_term = false,  -- Enable line numbers in the terminal.
 }
 ```
 

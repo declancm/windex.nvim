@@ -18,6 +18,7 @@ M.setup = function(options)
     default_keymaps = true,
     arrow_keys = false,
     disable = false,
+    numbered_terminal = false,
   }
 
   -- Setting options:
@@ -34,6 +35,10 @@ M.setup = function(options)
   -- Disable plugin.
   if options.disable == true then
     return
+  end
+  -- Use line numbers within terminal.
+  if options.numbered_term == true then
+    vim.g.__windex_numbered_term = true
   end
 
   -- AUTOCMDS:

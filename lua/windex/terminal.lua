@@ -39,8 +39,12 @@ M.enter = function(maximizeOption, command)
     vim.cmd('keepalt buffer ' .. vim.g.__windex_term_bufnr)
   end
   -- Set the local terminal options for better visuals.
+  if vim.g.__windex_numbered_term then
+    vim.opt_local.number = true
+  else
+    vim.opt_local.number = false
+  end
   vim.opt_local.relativenumber = false
-  vim.opt_local.number = false
   vim.opt_local.signcolumn = 'no'
   vim.cmd('startinsert')
 end
