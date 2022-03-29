@@ -24,7 +24,7 @@ end
 
 M.enter = function(maximizeOption, command)
   -- Maximize the window.
-  if maximizeOption ~= 'none' or maximizeOption ~= 'None' then
+  if maximizeOption ~= 'none' and maximizeOption ~= 'None' then
     maximize.maximize(maximizeOption)
   end
   -- Save the previous buffer number.
