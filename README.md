@@ -14,6 +14,11 @@ Works with or without tmux!
 * Works with plugins such as 'nvim-scrollview', which have floating windows
   (unlike other maximizing plugins).
 
+### Terminal Toggle
+
+* Use `<C-\>` to toggle the (improved) native terminal which will open
+  fullscreen. _(See the demo video at the bottom of the readme _👀_)_
+
 ### Cleaner Window Movement
 
 * Treats tmux panes as neovim windows which allows for easy window/pane movement.
@@ -25,11 +30,6 @@ Works with or without tmux!
 
 _Note: The {motion} keys by default are h, j, k and l, but can be replaced
   with the arrow keys. See 'Configuration' for details._
-
-### Terminal Toggle
-
-* Use `<C-\>` to toggle the (improved) native terminal which will open
-  fullscreen. _(See the demo video at the bottom of the readme _👀_)_
 
 ## ⏱️ Performance Comparison
 
@@ -77,29 +77,35 @@ require('cinnamon').setup {
 local opts = { noremap = true, silent = true }
 local keymap = vim.api.nvim_set_keymap
 
+-- IF TMUX 1.8+ ISN'T AVAILABLE, THE NON-TMUX KEYMAPS WILL AUTOMATICALLY BE USED INSTEAD.
+
+-- MAXIMIZE:
+
 -- Toggle maximizing the current window:
--- (If your system doesn't pass the tmux requirement, 'toggle_nvim_maximize()' will be used instead.)
 keymap('n', '<Leader>z', "<Cmd>lua require('windex').toggle_maximize()<CR>", opts)
 
--- Switch to previous nvim window or tmux pane:
-keymap('n', '<Leader>;', "<Cmd>lua require('windex').previous_window()<CR>", opts)
+-- TERMINAL:
+
+-- Toggle the terminal:
+keymap('n', '<C-Bslash>', "<Cmd>lua require('windex').toggle_terminal()<CR>", opts)
+keymap('t', '<C-Bslash>', "<Cmd>lua require('windex').toggle_terminal()<CR>", opts)
+-- Enter normal mode within terminal:
+keymap('t', '<C-n>', '<C-Bslash><C-n>', opts)
+
+-- MOVEMENT:
 
 -- Move between nvim windows and tmux panes:
 keymap('n', '<Leader>k', "<Cmd>lua require('windex').switch_window('up')<CR>", opts)
 keymap('n', '<Leader>j', "<Cmd>lua require('windex').switch_window('down')<CR>", opts)
 keymap('n', '<Leader>h', "<Cmd>lua require('windex').switch_window('left')<CR>", opts)
 keymap('n', '<Leader>l', "<Cmd>lua require('windex').switch_window('right')<CR>", opts)
-
 -- Save and close the nvim window or kill the tmux pane in the direction selected:
 keymap('n', '<Leader>xk', "<Cmd>lua require('windex').close_window('up')<CR>", opts)
 keymap('n', '<Leader>xj', "<Cmd>lua require('windex').close_window('down')<CR>", opts)
 keymap('n', '<Leader>xh', "<Cmd>lua require('windex').close_window('left')<CR>", opts)
 keymap('n', '<Leader>xl', "<Cmd>lua require('windex').close_window('right')<CR>", opts)
-
--- Toggle the terminal:
-keymap('n', '<C-Bslash>', "<Cmd>lua require('windex').toggle_terminal()<CR>", opts)
-keymap('t', '<C-Bslash>', "<Cmd>lua require('windex').toggle_terminal()<CR>", opts)
-keymap('t', '<C-n>', '<C-Bslash><C-n>', opts)
+-- Switch to previous nvim window or tmux pane:
+keymap('n', '<Leader>;', "<Cmd>lua require('windex').previous_window()<CR>", opts)
 ```
 
 _Note: The default keymap to toggle the terminal is CTRL-\\. To enter normal mode in
@@ -124,35 +130,6 @@ _Note: Check the default keymaps on how to implement the functions in keymaps._
 
   ```lua
   require('windex').toggle_maximize()
-  ```
-
-### Cleaner Window Movement
-
-* Treats tmux panes as neovim windows which allows for easy window/pane movement,
-  with the same function. The {direction} values are: 'up', 'down', 'left' or
-  'right'.
-
-  ```lua
-  require('windex').switch_window({direction})
-  ```
-
-* Save and quit the neovim window, or kill the tmux pane, in the selected
-  direction. The {direction} values are: 'up', 'down', 'left' or 'right'.
-
-  ```lua
-  require('windex').close_window({direction})
-  ```
-
-* Jump to the last neovim window or tmux pane.
-
-  ```lua
-  require('windex').previous_window()
-  ```
-
-* Create a tmux pane. The {split} values are: 'vertical' or 'horizontal'.
-
-  ```lua
-  require('windex').create_pane({split})
   ```
 
 ### Terminal Toggle
@@ -184,6 +161,35 @@ _Note: Check the default keymaps on how to implement the functions in keymaps._
       { noremap = true, silent = true }
     )
     ```
+
+### Cleaner Window Movement
+
+* Treats tmux panes as neovim windows which allows for easy window/pane movement,
+  with the same function. The {direction} values are: 'up', 'down', 'left' or
+  'right'.
+
+  ```lua
+  require('windex').switch_window({direction})
+  ```
+
+* Save and quit the neovim window, or kill the tmux pane, in the selected
+  direction. The {direction} values are: 'up', 'down', 'left' or 'right'.
+
+  ```lua
+  require('windex').close_window({direction})
+  ```
+
+* Jump to the last neovim window or tmux pane.
+
+  ```lua
+  require('windex').previous_window()
+  ```
+
+* Create a tmux pane. The {split} values are: 'vertical' or 'horizontal'.
+
+  ```lua
+  require('windex').create_pane({split})
+  ```
 
 ## 🎬 Demo Video
 

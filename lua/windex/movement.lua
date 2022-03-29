@@ -1,9 +1,11 @@
 local M = {}
 
+local utils = require('windex.utils')
+
 -- Save and quit nvim window or kill tmux pane in the direction selected.
 M.close = function(direction)
   local directionValues = { 'up', 'down', 'left', 'right', 'Up', 'Down', 'Left', 'Right' }
-  if not require('windex.utils').argument_is_valid(direction, directionValues) then
+  if not utils.argument_is_valid(direction, directionValues) then
     return
   end
   local previousWindow = vim.fn.winnr()
@@ -23,7 +25,7 @@ M.close = function(direction)
   end
   local newWindow = vim.fn.winnr()
   if previousWindow == newWindow then
-    if require('windex.utils').tmux_requirement_passed() then
+    if utils.tmux_requirement_passed() then
       os.execute([[
       #!/usr/bin/env bash
       (
@@ -44,7 +46,7 @@ end
 -- Move between nvim windows and tmux panes.
 M.switch = function(direction)
   local directionValues = { 'up', 'down', 'left', 'right', 'Up', 'Down', 'Left', 'Right' }
-  if not require('windex.utils').argument_is_valid(direction, directionValues) then
+  if not utils.argument_is_valid(direction, directionValues) then
     return
   end
   local previousWindow = vim.fn.winnr()
@@ -64,12 +66,20 @@ M.switch = function(direction)
   end
   local newWindow = vim.fn.winnr()
   if previousWindow == newWindow then
-    os.execute('tmux select-pane -' .. paneDirection .. ' > /dev/null 2>&1')
+    if utils.tmux_requirement_passed() then
+      os.execute('tmux select-pane -' .. paneDirection .. ' > /dev/null 2>&1')
+    end
   end
 end
 
 -- Switch to previous nvim window or tmux pane.
 M.previous = function()
+  -- Check if user has tmux installed.
+  if not utils.tmux_requirement_passed() then
+    vim.cmd('wincmd p')
+    return
+  end
+  -- Perform the switch.
   if vim.g.__windex_previous == 'tmux' then
     local tmuxStatus = os.execute('tmux select-pane -l > /dev/null 2>&1')
     if tmuxStatus ~= 0 then
@@ -87,6 +97,10 @@ end
 
 -- Create a tmux pane.
 M.create_pane = function(direction)
+  if not utils.tmux_requirement_passed() then
+    vim.cmd([[echohl ErrorMsg | echo 'Error: Tmux 1.8+ is required.' | echohl None]])
+    return
+  end
   if direction == 'vertical' or direction == 'Vertical' then
     os.execute("tmux split-window -h -c '#{pane_current_path}'")
   elseif direction == 'horizontal' or direction == 'Horizontal' then
