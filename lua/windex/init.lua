@@ -1,17 +1,17 @@
 local M = {}
 
+local utils = require('cinnamon.utils')
+
 M.setup = function(options)
   vim.g.__windex_setup_loaded = 1
 
   -- Check if user is on Windows.
   if vim.fn.has('win32') == 1 then
-    vim.cmd([[
-    echohl WarningMsg
-    echo "Error: A unix system is required for 'windex' :(. Have you tried using WSL?"
-    echohl None
-    ]])
+    utils.error_msg("A unix system is required for 'windex' :(. Have you tried using WSL?")
     return
   end
+
+  -- OPTIONS:
 
   -- Default values:
   local defaults = {
@@ -20,7 +20,6 @@ M.setup = function(options)
     disable = false,
     numbered_terminal = false,
   }
-
   -- Setting options:
   if options == nil then
     options = defaults
@@ -33,11 +32,11 @@ M.setup = function(options)
   end
 
   -- Disable plugin.
-  if options.disable == true then
+  if options.disable then
     return
   end
   -- Use line numbers within terminal.
-  if options.numbered_term == true then
+  if options.numbered_term then
     vim.g.__windex_numbered_term = true
   end
 

@@ -1,5 +1,9 @@
 local M = {}
 
+M.error_msg = function(message)
+  vim.cmd([[echohl ErrorMsg | echom 'Error: ]] .. message .. [[' | echohl None]])
+end
+
 M.tmux_requirement_passed = function()
   -- Check if command fails. If it fails, tmux is not installed.
   if os.execute('tmux -V') ~= 0 then
@@ -53,7 +57,7 @@ M.argument_is_valid = function(argument, optionalValues)
     end
   end
   if not argumentValid then
-    vim.cmd([[echohl ErrorMsg | echo "Error: Not a valid argument." | echohl None]])
+    require('cinnamon.utils').error_msg('Not a valid argument')
     return false
   end
   return true

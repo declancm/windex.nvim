@@ -98,7 +98,7 @@ end
 -- Create a tmux pane.
 M.create_pane = function(direction)
   if not utils.tmux_requirement_passed() then
-    vim.cmd([[echohl ErrorMsg | echo 'Error: Tmux 1.8+ is required.' | echohl None]])
+    utils.error_msg('Tmux 1.8+ is required')
     return
   end
   if direction == 'vertical' or direction == 'Vertical' then
@@ -106,7 +106,7 @@ M.create_pane = function(direction)
   elseif direction == 'horizontal' or direction == 'Horizontal' then
     os.execute("tmux split-window -v -c '#{pane_current_path}'")
   else
-    vim.cmd([[echohl ErrorMsg | echo "Error: Not a valid argument." | echohl None]])
+    utils.error_msg('Not a valid argument')
   end
 end
 

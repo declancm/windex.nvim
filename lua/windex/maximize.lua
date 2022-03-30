@@ -5,13 +5,9 @@ local utils = require('windex.utils')
 -- Toggle maximizing the current nvim window and tmux pane.
 M.toggle = function(maximizeOption)
   maximizeOption = maximizeOption or 'all'
-  if maximizeOption == 'all' then
+  if maximizeOption == 'all' or maximizeOption == 'All' then
     if utils.tmux_requirement_passed() == false then
-      vim.cmd([[
-      echohl ErrorMsg
-      echo "Error: Tmux 1.8+ is required. Use 'maximize_nvim_window()' instead or install/update Tmux."
-      echohl None
-      ]])
+      utils.error_msg("Tmux 1.8+ is required. Use 'maximize_nvim_window() instead or install/update Tmux")
       return
     end
   end
@@ -36,11 +32,7 @@ M.maximize = function(maximizeOption)
   for _, win in ipairs(vim.api.nvim_list_wins()) do
     local config = vim.api.nvim_win_get_config(win)
     if config.relative ~= '' then
-      vim.cmd([[
-      echohl ErrorMsg
-      echo "Error: Cannot maximize. A floating window with unsaved changes exists."
-      echohl None
-      ]])
+      utils.error_msg('Cannot maximize. A floating window with unsaved changes exists.')
       return
     end
   end
