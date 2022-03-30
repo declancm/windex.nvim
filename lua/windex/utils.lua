@@ -1,7 +1,8 @@
 local M = {}
 
-M.error_msg = function(message)
-  vim.cmd([[echohl ErrorMsg | echom 'Error: ]] .. message .. [[' | echohl None]])
+M.error_msg = function(message, code)
+  code = code or 'Error'
+  vim.cmd("echohl ErrorMsg | echom '" .. code .. ': ' .. message .. "' | echohl None")
 end
 
 M.tmux_requirement_passed = function()
@@ -25,26 +26,14 @@ M.tmux_requirement_passed = function()
 end
 
 M.tmux_maximized = function()
-  -- Compare the size of the current tmux pane with the tmux window.
   local exitStatus = os.execute([[
   #!/usr/bin/env bash
-  (
-    paneWidth=$(tmux display-message -p '#{pane_width}')
-    windowWidth=$(tmux display-message -p '#{window_width}')
-    paneHeight=$(tmux display-message -p '#{pane_height}')
-    windowHeight=$(tmux display-message -p '#{window_height}')
-    if [ $paneWidth -ne $windowWidth ] || [ $paneHeight -ne $windowHeight ]
-    then
-      exit 1
-    else
-      exit 0
-    fi
-  ) > /dev/null 2>&1
+  exit $(tmux display-message -p '#{window_zoomed_flag}') > /dev/null 2>&1
   ]])
   if exitStatus == 0 then
-    return true
-  else
     return false
+  else
+    return true
   end
 end
 
@@ -57,7 +46,7 @@ M.argument_is_valid = function(argument, optionalValues)
     end
   end
   if not argumentValid then
-    require('cinnamon.utils').error_msg('Not a valid argument')
+    require('windex.utils').error_msg('Not a valid argument')
     return false
   end
   return true

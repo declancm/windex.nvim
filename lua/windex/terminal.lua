@@ -1,5 +1,6 @@
 local M = {}
 
+local options = require('windex').options
 local utils = require('windex.utils')
 local maximize = require('windex.maximize')
 
@@ -39,7 +40,7 @@ M.enter = function(maximizeOption, command)
     vim.cmd('keepalt buffer ' .. vim.g.__windex_term_bufnr)
   end
   -- Set the local terminal options for better visuals.
-  if vim.g.__windex_numbered_term then
+  if options['numbered_term'] then
     vim.opt_local.number = true
   else
     vim.opt_local.number = false

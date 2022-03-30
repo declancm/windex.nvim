@@ -1,13 +1,13 @@
 local M = {}
 
-local utils = require('cinnamon.utils')
-
 M.setup = function(options)
   vim.g.__windex_setup_loaded = 1
 
   -- Check if user is on Windows.
   if vim.fn.has('win32') == 1 then
-    utils.error_msg("A unix system is required for 'windex' :(. Have you tried using WSL?")
+    vim.cmd(
+      [[echohl ErrorMsg | echom "Error: A unix system is required for 'windex' :(. Have you tried using WSL?" | echohl None]]
+    )
     return
   end
 
@@ -31,16 +31,16 @@ M.setup = function(options)
     end
   end
 
+  M.options = options
+
   -- Disable plugin.
   if options.disable then
     return
   end
-  -- Use line numbers within terminal.
-  if options.numbered_term then
-    vim.g.__windex_numbered_term = true
-  end
 
   -- AUTOCMDS:
+
+  -- TODO: don't restore from terminal if window was already maximized before opening terminal
 
   -- Restore windows when terminal is exited.
   vim.cmd([[

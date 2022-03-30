@@ -64,7 +64,7 @@ A settings table can be passed into the setup function for custom options.
 The default settings are:
 
 ```lua
-require('cinnamon').setup {
+require('windex').setup {
   default_keymaps = true, -- Enable default keymaps.
   arrow_keys = false,     -- Default keymaps use arrow keys instead of 'h,j,k,l'.
   disable = false,        -- Disable the plugin.
