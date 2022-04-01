@@ -1,5 +1,6 @@
 local M = {}
 
+local tmux = require('windex.tmux')
 local utils = require('windex.utils')
 
 -- Save and quit nvim window or kill tmux pane in the direction selected.
@@ -25,7 +26,7 @@ M.close = function(direction)
   end
   local newWindow = vim.fn.winnr()
   if previousWindow == newWindow then
-    if utils.tmux_requirement_passed() then
+    if tmux.requirement_passed() then
       os.execute([[
       #!/usr/bin/env bash
       (
@@ -66,7 +67,7 @@ M.switch = function(direction)
   end
   local newWindow = vim.fn.winnr()
   if previousWindow == newWindow then
-    if utils.tmux_requirement_passed() then
+    if tmux.requirement_passed() then
       os.execute('tmux select-pane -' .. paneDirection .. ' > /dev/null 2>&1')
     end
   end
@@ -75,7 +76,7 @@ end
 -- Switch to previous nvim window or tmux pane.
 M.previous = function()
   -- Check if user has tmux installed.
-  if not utils.tmux_requirement_passed() then
+  if not tmux.requirement_passed() then
     vim.cmd('wincmd p')
     return
   end
@@ -97,7 +98,7 @@ end
 
 -- Create a tmux pane.
 M.create_pane = function(direction)
-  if not utils.tmux_requirement_passed() then
+  if not tmux.requirement_passed() then
     utils.error_msg('Tmux 1.8+ is required')
     return
   end

@@ -5,15 +5,13 @@ M.setup = function(options)
 
   -- Check if user is on Windows.
   if vim.fn.has('win32') == 1 then
-    vim.cmd(
-      [[echohl ErrorMsg | echom "Error: A unix system is required for 'windex' :(. Have you tried using WSL?" | echohl None]]
-    )
+    require('windex.utils').error_msg('A unix system is required for windex. Have you tried using WSL?')
     return
   end
 
   -- OPTIONS:
 
-  -- Default values:
+  -- Default options:
   local defaults = {
     default_keymaps = true,
     arrow_keys = false,
@@ -30,7 +28,6 @@ M.setup = function(options)
       end
     end
   end
-
   M.options = options
 
   -- Disable plugin.
@@ -67,7 +64,6 @@ M.setup = function(options)
   ]])
 
   -- KEYMAPS:
-
   local keymap = vim.api.nvim_set_keymap
   local opts = { noremap = true, silent = true }
 
@@ -75,7 +71,7 @@ M.setup = function(options)
     -- Enter normal mode in terminal.
     keymap('t', '<C-n>', '<C-Bslash><C-N>', opts)
     -- Check if user is using a valid version of tmux.
-    if require('windex.utils').tmux_requirement_passed() then
+    if require('windex.tmux').requirement_passed() then
       -- Toggle the native terminal.
       keymap('n', '<C-Bslash>', "<Cmd>lua require('windex').toggle_terminal()<CR>", opts)
       keymap('t', '<C-Bslash>', "<Cmd>lua require('windex').toggle_terminal()<CR>", opts)

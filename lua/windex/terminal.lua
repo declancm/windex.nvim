@@ -17,9 +17,9 @@ M.toggle = function(maximizeOption, command)
   end
   -- Check the buffer type and toggle terminal.
   if vim.bo.buftype == 'terminal' then
-    require('windex.terminal').exit(maximizeOption)
+    M.exit(maximizeOption)
   else
-    require('windex.terminal').enter(maximizeOption, command)
+    M.enter(maximizeOption, command)
   end
 end
 

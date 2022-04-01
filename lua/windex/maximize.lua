@@ -1,20 +1,21 @@
 local M = {}
 
+local tmux = require('windex.tmux')
 local utils = require('windex.utils')
 
 -- Toggle maximizing the current nvim window and tmux pane.
 M.toggle = function(maximizeOption)
   maximizeOption = maximizeOption or 'all'
   if maximizeOption == 'all' or maximizeOption == 'All' then
-    if utils.tmux_requirement_passed() == false then
+    if tmux.requirement_passed() == false then
       utils.error_msg("Tmux 1.8+ is required. Use 'maximize_nvim_window() instead or install/update Tmux")
       return
     end
   end
   if not vim.w.__windex_maximized then
-    require('windex.maximize').maximize(maximizeOption)
+    M.maximize(maximizeOption)
   else
-    require('windex.maximize').restore(maximizeOption)
+    M.restore(maximizeOption)
   end
 end
 
@@ -46,7 +47,7 @@ M.maximize = function(maximizeOption)
   end
   -- Maximize tmux pane.
   if maximizeOption == 'all' or maximizeOption == 'All' then
-    if utils.tmux_maximized() == false then
+    if tmux.is_maximized() == false then
       os.execute('tmux resize-pane -Z > /dev/null 2>&1')
     end
   end
@@ -58,7 +59,7 @@ M.restore = function(maximizeOption)
   maximizeOption = maximizeOption or 'all'
   -- Restore tmux panes.
   if maximizeOption == 'all' or maximizeOption == 'All' then
-    if utils.tmux_maximized() == true then
+    if tmux.is_maximized() == true then
       os.execute('tmux resize-pane -Z > /dev/null 2>&1')
     end
   end
