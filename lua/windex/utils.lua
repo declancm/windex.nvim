@@ -3,7 +3,7 @@ local M = {}
 M.error_msg = function(message, code, color)
   code = code or 'Error'
   color = color or 'ErrorMsg'
-  vim.cmd(string.format("echohl %s | echom '%s: %s' | echohl None", color, code, message))
+  vim.cmd(string.format('echohl %s | echom "%s: %s" | echohl None', color, code, message))
 end
 
 M.argument_is_valid = function(argument, optionalValues)

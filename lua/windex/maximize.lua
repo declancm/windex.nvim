@@ -8,7 +8,7 @@ M.toggle = function(maximizeOption)
   maximizeOption = maximizeOption or 'all'
   if maximizeOption == 'all' or maximizeOption == 'All' then
     if tmux.requirement_passed() == false then
-      utils.error_msg("Tmux 1.8+ is required. Use 'maximize_nvim_window() instead or install/update Tmux")
+      utils.error_msg("Tmux 1.8+ is required. Use 'maximize_nvim_window()' instead or install/update Tmux")
       return
     end
   end
