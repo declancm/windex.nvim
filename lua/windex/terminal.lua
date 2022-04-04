@@ -40,7 +40,7 @@ M.enter = function(maximizeOption, command)
     vim.cmd('keepalt buffer ' .. vim.g.__windex_term_bufnr)
   end
   -- Set the local terminal options for better visuals.
-  if options['numbered_term'] then
+  if options.numbered_term then
     vim.opt_local.number = true
   else
     vim.opt_local.number = false

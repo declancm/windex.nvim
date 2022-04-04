@@ -39,7 +39,7 @@ M.maximize = function(maximizeOption)
   end
   -- Maximize nvim window.
   if vim.fn.winnr('$') ~= 1 then
-    local savedOptions = vim.opt.sessionoptions
+    local savedOptions = vim.opt.sessionoptions:get()
     vim.opt.sessionoptions = { 'blank', 'buffers', 'curdir', 'folds', 'help', 'tabpages', 'winsize' }
     vim.cmd('mksession! ~/.cache/nvim/.maximize_session.vim')
     vim.opt.sessionoptions = savedOptions
