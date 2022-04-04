@@ -37,13 +37,11 @@ M.setup = function(options)
 
   -- AUTOCMDS:
 
-  -- TODO: don't restore from terminal if window was already maximized before opening terminal
-
   -- Restore windows when terminal is exited.
   vim.cmd([[
   aug windex_terminal
   au!
-  au TermClose * lua require('windex.maximize').restore()
+  au TermClose * lua require('windex.terminal').restore()
   aug END
   ]])
   -- Previous window autocmds.
@@ -135,8 +133,8 @@ end
 M.enter_terminal = function(...)
   require('windex.terminal').enter(...)
 end
-M.exit_terminal = function(...)
-  require('windex.terminal').exit(...)
+M.exit_terminal = function()
+  require('windex.terminal').exit()
 end
 -- Movement:
 M.switch_window = function(...)

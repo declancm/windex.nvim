@@ -17,13 +17,19 @@ M.toggle = function(maximizeOption, command)
   end
   -- Check the buffer type and toggle terminal.
   if vim.bo.buftype == 'terminal' then
-    M.exit(maximizeOption)
+    M.exit()
   else
     M.enter(maximizeOption, command)
   end
 end
 
 M.enter = function(maximizeOption, command)
+  if vim.w.__windex_maximized then
+    vim.w.__windex_term_restore = false
+  else
+    vim.w.__windex_term_restore = true
+  end
+  vim.w.__windex_term_restore_option = maximizeOption
   -- Maximize the window.
   if maximizeOption ~= 'none' and maximizeOption ~= 'None' then
     maximize.maximize(maximizeOption)
@@ -50,7 +56,7 @@ M.enter = function(maximizeOption, command)
   vim.cmd('startinsert')
 end
 
-M.exit = function(maximizeOption)
+M.exit = function()
   -- Save the terminal buffer number.
   vim.g.__windex_term_bufnr = vim.fn.bufnr()
   -- Return to the previous buffer.
@@ -61,8 +67,12 @@ M.exit = function(maximizeOption)
     vim.cmd('keepalt buffer ' .. vim.g.__windex_term_prev)
   end
   -- Restore the windows.
-  if maximizeOption ~= 'none' or maximizeOption ~= 'None' then
-    maximize.restore(maximizeOption)
+  M.restore()
+end
+
+M.restore = function()
+  if vim.w.__windex_term_restore then
+    maximize.restore(vim.w.__windex_term_restore_option)
   end
 end
 
