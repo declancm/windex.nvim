@@ -16,7 +16,7 @@ M.setup = function(options)
     default_keymaps = true,
     arrow_keys = false,
     disable = false,
-    numbered_terminal = false,
+    numbered_term = false,
   }
   -- Setting options:
   if options == nil then
