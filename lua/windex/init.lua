@@ -65,7 +65,7 @@ M.setup = function(options)
   local keymap = vim.api.nvim_set_keymap
   local opts = { noremap = true, silent = true }
 
-  if options.default_keymaps == true then
+  if options.default_keymaps then
     -- Enter normal mode in terminal.
     keymap('t', '<C-n>', '<C-Bslash><C-N>', opts)
     -- Check if user is using a valid version of tmux.
@@ -83,7 +83,7 @@ M.setup = function(options)
       keymap('n', '<Leader>z', "<Cmd>lua require('windex').toggle_nvim_maximize()<CR>", opts)
     end
     -- Check if the user wants to use h,j,k,l or arrow keys.
-    if options.arrow_keys == false then
+    if not options.arrow_keys then
       -- Move between nvim windows and tmux panes.
       keymap('n', '<Leader>k', "<Cmd>lua require('windex').switch_window('up')<CR>", opts)
       keymap('n', '<Leader>j', "<Cmd>lua require('windex').switch_window('down')<CR>", opts)

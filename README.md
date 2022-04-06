@@ -17,7 +17,7 @@ Works with or without tmux!
 ### Terminal Toggle
 
 * Use `<C-\>` to toggle the (improved) native terminal which will open
-  fullscreen. _(See the demo video at the bottom of the readme _👀_)_
+  fullscreen. _(See the demo video below)_
 
 ### Cleaner Window Movement
 
@@ -31,9 +31,12 @@ Works with or without tmux!
 _Note: The {motion} keys by default are h, j, k and l, but can be replaced
   with the arrow keys. See 'Configuration' for details._
 
-## ⏱️ Performance Comparison
+## 🔥 Demonstration
 
-A comparison of vim-maximizer and windex.nvim with maximizing a nvim window and a tmux pane split.
+<details>
+<summary markdown="span">Maximizing Performance Comparison with Vim-Maximizer</summary>
+
+<!-- A comparison of vim-maximizer and windex.nvim with maximizing a nvim window and a tmux pane split. -->
 
 ### vim-maximizer
 
@@ -46,6 +49,17 @@ Has weird thing in the top left where it didn't maximize properly and doesn't ma
 Perfectly maximizes the neovim window and tmux pane! 👑
 
 ![windex](https://user-images.githubusercontent.com/90937622/159694138-5b99ec1d-e860-42fb-9af6-ca23b98dda25.png)
+
+</details>
+
+<details>
+<summary markdown="span">Demo Video - Terminal Toggle</summary>
+
+### Nvim Window / Tmux Pane Movement and Terminal Toggle
+
+https://user-images.githubusercontent.com/90937622/159681079-58f36668-e78b-41fa-b929-e9ebc9dd8d3b.mp4
+
+</details>
 
 ## 📦 Installation
 
@@ -61,12 +75,12 @@ use 'declancm/windex.nvim'
 
 A settings table can be passed into the setup function for custom options.
 
-The default settings are:
+__Default Settings:__
 
 ```lua
 require('windex').setup {
   default_keymaps = true, -- Enable default keymaps.
-  arrow_keys = false,     -- Default keymaps use arrow keys instead of 'h,j,k,l'.
+  arrow_keys = false,     -- Default window movement keymaps use arrow keys instead of 'h,j,k,l'.
   disable = false,        -- Disable the plugin.
   numbered_term = false,  -- Enable line numbers in the terminal.
 }
@@ -113,7 +127,7 @@ _Note: The default keymap to toggle the terminal is CTRL-\\. To enter normal mod
 terminal, the key combination is CTRL-\\ + CTRL-N which is no longer possible to 
 execute. This sequence is therefore remapped to CTRL-N when in the terminal._
 
-## ℹ️ Usage
+## ℹ️ API
 
 _Note: Check the default keymaps on how to implement the functions in keymaps._
 
@@ -191,9 +205,3 @@ _Note: Check the default keymaps on how to implement the functions in keymaps._
   ```lua
   require('windex').create_pane({split})
   ```
-
-## 🎬 Demo Video
-
-### Nvim Window / Tmux Pane Movement and Terminal Toggle
-
-https://user-images.githubusercontent.com/90937622/159681079-58f36668-e78b-41fa-b929-e9ebc9dd8d3b.mp4

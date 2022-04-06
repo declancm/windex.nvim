@@ -23,6 +23,9 @@ end
 M.maximize = function(maximizeOption)
   maximizeOption = maximizeOption or 'all'
   vim.w.__windex_restore_option = maximizeOption
+  if maximizeOption == 'none' or maximizeOption == 'None' then
+    return
+  end
   -- Close floating windows because they break session files.
   for _, win in ipairs(vim.api.nvim_list_wins()) do
     local config = vim.api.nvim_win_get_config(win)
@@ -58,6 +61,9 @@ end
 -- Restore the nvim windows and tmux panes.
 M.restore = function(maximizeOption)
   maximizeOption = maximizeOption or vim.w.__windex_restore_option or 'all'
+  if maximizeOption == 'none' or maximizeOption == 'None' then
+    return
+  end
   -- Restore tmux panes.
   if maximizeOption == 'all' or maximizeOption == 'All' then
     if tmux.is_maximized() == true then
@@ -65,20 +71,18 @@ M.restore = function(maximizeOption)
     end
   end
   -- Restore nvim windows.
-  if maximizeOption ~= 'none' and maximizeOption ~= 'None' then
-    if vim.fn.filereadable(vim.fn.getenv('HOME') .. '/.cache/nvim/.maximize_session.vim') == 1 then
-      -- Save buffers.
-      vim.cmd('wall')
-      -- Source the saved session.
-      local fileName = vim.fn.getreg('%')
-      local savedPosition = vim.fn.getcurpos()
-      vim.cmd('so ~/.cache/nvim/.maximize_session.vim')
-      vim.fn.delete(vim.fn.getenv('HOME') .. '/.cache/nvim/.maximize_session.vim')
-      if vim.fn.getreg('%') ~= fileName then
-        vim.cmd('e ' .. fileName)
-      end
-      vim.fn.setpos('.', savedPosition)
+  if vim.fn.filereadable(vim.fn.getenv('HOME') .. '/.cache/nvim/.maximize_session.vim') == 1 then
+    -- Save buffers.
+    vim.cmd('wall')
+    -- Source the saved session.
+    local fileName = vim.fn.getreg('%')
+    local savedPosition = vim.fn.getcurpos()
+    vim.cmd('so ~/.cache/nvim/.maximize_session.vim')
+    vim.fn.delete(vim.fn.getenv('HOME') .. '/.cache/nvim/.maximize_session.vim')
+    if vim.fn.getreg('%') ~= fileName then
+      vim.cmd('e ' .. fileName)
     end
+    vim.fn.setpos('.', savedPosition)
   end
   vim.w.__windex_maximized = false
 end
