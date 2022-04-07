@@ -31,7 +31,7 @@ Works with or without tmux!
 _Note: The {motion} keys by default are h, j, k and l, but can be replaced
   with the arrow keys. See 'Configuration' for details._
 
-## 🔥 Demonstration
+## 🔥 Demos
 
 <details>
 <summary markdown="span">Maximizing Performance Comparison with Vim-Maximizer</summary>
@@ -55,7 +55,7 @@ Perfectly maximizes the neovim window and tmux pane! 👑
 <details>
 <summary markdown="span">Demo Video - Terminal Toggle</summary>
 
-### Nvim Window / Tmux Pane Movement and Terminal Toggle
+### Window / Pane Movement and Terminal Toggle
 
 https://user-images.githubusercontent.com/90937622/159681079-58f36668-e78b-41fa-b929-e9ebc9dd8d3b.mp4
 
