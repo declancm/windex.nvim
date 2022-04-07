@@ -13,14 +13,21 @@ M.toggle = function(maximizeOption, command)
     if maximizeOption == '' then
       maximizeOption = 'all'
     end
+
     if not utils.argument_is_valid(maximizeOption, { 'none', 'nvim', 'all' }) then
       return
     end
+
     M.enter(maximizeOption, command)
   end
 end
 
 M.enter = function(maximizeOption, command)
+  maximizeOption = maximizeOption or 'all'
+  if not utils.argument_is_valid(maximizeOption, { 'none', 'nvim', 'all' }) then
+    return
+  end
+
   if vim.w.__windex_maximized then
     vim.w.__windex_term_restore = false
   else

@@ -65,7 +65,7 @@ M.switch = function(direction)
   -- If nvim window hasn't changed, switch tmux pane.
   if previousWindow == newWindow then
     if tmux.requirement_passed() then
-      os.execute('tmux select-pane -' .. directions.tmux[direction] .. ' > /dev/null 2>&1')
+      tmux.execute('select-pane -' .. directions.tmux[direction])
     end
   end
 end
@@ -89,7 +89,7 @@ M.previous = function()
     vim.cmd('wincmd p')
     local newWindow = vim.fn.winnr()
     if previousWindow == newWindow then
-      os.execute('tmux select-pane -l > /dev/null 2>&1')
+      tmux.execute('select-pane -l')
     end
   end
 end
@@ -103,9 +103,9 @@ M.create_pane = function(direction)
   end
 
   if direction == 'vertical' then
-    os.execute("tmux split-window -h -c '#{pane_current_path}'")
+    tmux.execute("split-window -h -c '#{pane_current_path}'")
   elseif direction == 'horizontal' or direction == 'Horizontal' then
-    os.execute("tmux split-window -v -c '#{pane_current_path}'")
+    tmux.execute("split-window -v -c '#{pane_current_path}'")
   else
     utils.error_msg('Not a valid argument')
   end
