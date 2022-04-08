@@ -14,30 +14,23 @@ M.close = function(direction)
     return
   end
 
-  local previousWindow = vim.fn.winnr()
-
-  -- Switch nvim window.
+  -- Quit the nvim window.
+  local previousWindow = vim.api.nvim_get_current_win()
   vim.cmd('wincmd ' .. directions.nvim[direction])
-
-  local newWindow = vim.fn.winnr()
-
-  if previousWindow == newWindow then
-    -- If nvim window hasn't changed, switch tmux pane and kill.
-    if tmux.requirement_passed() then
-      os.execute([[
-      #!/usr/bin/env bash
-      (
-        previousPane=$(tmux display-message -p '#{pane_id}')
-        newPane=$(tmux select-pane -]] .. directions.tmux[direction] .. [[; tmux display-message -p '#{pane_id}')
-        if [ $previousPane != $newPane ]; then
-          tmux kill-pane
-        fi
-      ) > /dev/null 2>&1
-      ]])
-    end
-  else
+  local newWindow = vim.api.nvim_get_current_win()
+  if previousWindow ~= newWindow then
     vim.cmd('exit')
-    -- vim.cmd [[exec (&modifiable && &modified) ? 'wq' : 'q']]
+    return
+  end
+
+  -- Quit the tmux window.
+  if tmux.requirement_passed() then
+    local previousPane = tmux.execute("display-message -p '#{pane_id}'")
+    tmux.execute('select-pane -' .. directions.tmux[direction])
+    local newPane = tmux.execute("display-message -p '#{pane_id}'")
+    if previousPane ~= newPane then
+      tmux.execute('kill-pane')
+    end
   end
 end
 
@@ -47,20 +40,23 @@ M.switch = function(direction)
     return
   end
 
-  local previousWindow = vim.fn.winnr()
+  local previousWindow = vim.api.nvim_get_current_win()
+  vim.cmd('wincmd ' .. directions.nvim[direction])
+  local newWindow = vim.api.nvim_get_current_win()
 
-  -- Switch nvim window.
-  if direction == 'left' and tmux.single_pane() and vim.fn.winnr() == 1 then
-    -- If already in the left-most nvim window, move to the last window.
-    vim.cmd(vim.fn.winnr('$') .. ' wincmd w')
-  elseif direction == 'right' and tmux.single_pane() and vim.fn.winnr() == vim.fn.winnr('$') then
-    -- If already in the right-most nvim window, move to the first window.
-    vim.cmd('1 wincmd w')
-  else
-    vim.cmd('wincmd ' .. directions.nvim[direction])
+  -- If on an edge window, perform circular window movement.
+  if previousWindow == newWindow and tmux.single_pane(directions.nvim[direction]) then
+    local alt_directions = { h = 'l', j = 'k', k = 'j', l = 'h' }
+    local at_alt_edge = false
+
+    while not at_alt_edge do
+      local new_cur_win = vim.api.nvim_get_current_win()
+      vim.cmd('wincmd ' .. alt_directions[directions.nvim[direction]])
+      at_alt_edge = new_cur_win == vim.api.nvim_get_current_win()
+    end
   end
 
-  local newWindow = vim.fn.winnr()
+  newWindow = vim.api.nvim_get_current_win()
 
   -- If nvim window hasn't changed, switch tmux pane.
   if previousWindow == newWindow then
@@ -80,14 +76,16 @@ M.previous = function()
 
   -- Perform the switch.
   if vim.g.__windex_previous == 'tmux' then
-    local tmuxStatus = os.execute('tmux select-pane -l > /dev/null 2>&1')
-    if tmuxStatus ~= 0 then
+    local previousPane = tmux.execute("display-message -p '#{pane_id}'")
+    tmux.execute('select-pane -l')
+    local newPane = tmux.execute("display-message -p '#{pane_id}'")
+    if previousPane == newPane then
       vim.cmd('wincmd p')
     end
   else
-    local previousWindow = vim.fn.winnr()
+    local previousWindow = vim.api.nvim_get_current_win()
     vim.cmd('wincmd p')
-    local newWindow = vim.fn.winnr()
+    local newWindow = vim.api.nvim_get_current_win()
     if previousWindow == newWindow then
       tmux.execute('select-pane -l')
     end

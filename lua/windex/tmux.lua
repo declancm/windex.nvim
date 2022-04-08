@@ -31,21 +31,23 @@ M.is_maximized = function()
   return M.execute("display-message -p '#{window_zoomed_flag}'") == '1'
 end
 
-M.single_pane = function()
-  -- If tmux not installed, no other tmux panes exist.
+M.single_pane = function(direction)
+  -- Check if tmux is installed.
   if not TMUX then
     return true
   end
 
-  return M.execute("display-message -p '#{window_panes}'") == '1'
-end
+  -- Check if only one pane.
+  if M.execute("display-message -p '#{window_panes}'") == '1' then
+    return true
+  end
 
-M.is_first_pane = function()
-  return M.execute("display-message -p '#{pane_index}'") == '1'
-end
-
-M.is_last_pane = function()
-  return M.execute("display-message -p '#{pane_index}'") == M.execute("display-message -p '#{window_panes}'")
+  -- Compare dimensions of the tmux pane and tmux window in direction
+  if direction == 'h' or direction == 'l' then
+    return M.execute("display-message -p '#{pane_width}'") == M.execute("display-message -p '#{window_width}'")
+  elseif direction == 'j' or direction == 'k' then
+    return M.execute("display-message -p '#{pane_height}'") == M.execute("display-message -p '#{window_height}'")
+  end
 end
 
 return M
