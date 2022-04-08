@@ -83,6 +83,7 @@ require('windex').setup {
   arrow_keys = false,     -- Default window movement keymaps use arrow keys instead of 'h,j,k,l'.
   disable = false,        -- Disable the plugin.
   numbered_term = false,  -- Enable line numbers in the terminal.
+  save_buffers = false,   -- Save all buffers before switching tmux panes.
 }
 ```
 

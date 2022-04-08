@@ -1,8 +1,6 @@
 local M = {}
 
 -- TODO: move options table to a config file
--- TODO: add option to disable tmux pane movement when maximized
--- TODO: add option to save nvim buffers before switching to tmux pane
 
 M.setup = function(options)
   vim.g.__windex_setup_loaded = 1
@@ -21,6 +19,7 @@ M.setup = function(options)
     arrow_keys = false,
     disable = false,
     numbered_term = false,
+    save_buffers = false,
   }
   -- Setting options:
   if options == nil then
