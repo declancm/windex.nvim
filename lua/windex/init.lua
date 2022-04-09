@@ -129,6 +129,7 @@ end
 M.restore_windows = function(...)
   require('windex.maximize').restore(...)
 end
+
 -- Terminal:
 M.toggle_terminal = function(...)
   require('windex.terminal').toggle(...)
@@ -139,6 +140,7 @@ end
 M.exit_terminal = function()
   require('windex.terminal').exit()
 end
+
 -- Movement:
 M.switch_window = function(...)
   require('windex.movement').switch(...)

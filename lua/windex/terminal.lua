@@ -5,26 +5,26 @@ local utils = require('windex.utils')
 local maximize = require('windex.maximize')
 
 -- Toggle the native terminal.
-M.toggle = function(maximizeOption, command)
+M.toggle = function(maximize_option, command)
   if vim.bo.buftype == 'terminal' then
     M.exit()
   else
-    maximizeOption = maximizeOption or 'all'
-    if maximizeOption == '' then
-      maximizeOption = 'all'
+    maximize_option = maximize_option or 'all'
+    if maximize_option == '' then
+      maximize_option = 'all'
     end
 
-    if not utils.argument_is_valid(maximizeOption, { 'none', 'nvim', 'all' }) then
+    if not utils.argument_is_valid(maximize_option, { 'none', 'nvim', 'all' }) then
       return
     end
 
-    M.enter(maximizeOption, command)
+    M.enter(maximize_option, command)
   end
 end
 
-M.enter = function(maximizeOption, command)
-  maximizeOption = maximizeOption or 'all'
-  if not utils.argument_is_valid(maximizeOption, { 'none', 'nvim', 'all' }) then
+M.enter = function(maximize_option, command)
+  maximize_option = maximize_option or 'all'
+  if not utils.argument_is_valid(maximize_option, { 'none', 'nvim', 'all' }) then
     return
   end
 
@@ -33,11 +33,11 @@ M.enter = function(maximizeOption, command)
   else
     vim.w.__windex_term_restore = true
   end
-  vim.w.__windex_term_restore_option = maximizeOption
+  vim.w.__windex_term_restore_option = maximize_option
 
   -- Maximize the window.
-  if maximizeOption ~= 'none' then
-    maximize.maximize(maximizeOption)
+  if maximize_option ~= 'none' then
+    maximize.maximize(maximize_option)
   end
 
   -- Save the previous buffer number.

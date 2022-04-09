@@ -16,20 +16,20 @@ M.close = function(direction)
   end
 
   -- Quit the nvim window.
-  local previousWindow = vim.api.nvim_get_current_win()
+  local prev_window = vim.api.nvim_get_current_win()
   vim.cmd('wincmd ' .. directions.nvim[direction])
-  local newWindow = vim.api.nvim_get_current_win()
-  if previousWindow ~= newWindow then
+  local new_window = vim.api.nvim_get_current_win()
+  if prev_window ~= new_window then
     vim.cmd('exit')
     return
   end
 
   -- Quit the tmux window.
   if tmux.requirement_passed() and not tmux.is_maximized() then
-    local previousPane = tmux.execute("display-message -p '#{pane_id}'")
+    local prev_pane = tmux.execute("display-message -p '#{pane_id}'")
     tmux.execute('select-pane -' .. directions.tmux[direction])
-    local newPane = tmux.execute("display-message -p '#{pane_id}'")
-    if previousPane ~= newPane then
+    local new_pane = tmux.execute("display-message -p '#{pane_id}'")
+    if prev_pane ~= new_pane then
       tmux.execute('kill-pane')
     end
   end
@@ -42,12 +42,12 @@ M.switch = function(direction)
   end
 
   -- Switch nvim window.
-  local previousWindow = vim.api.nvim_get_current_win()
+  local prev_window = vim.api.nvim_get_current_win()
   vim.cmd('wincmd ' .. directions.nvim[direction])
-  local newWindow = vim.api.nvim_get_current_win()
+  local new_window = vim.api.nvim_get_current_win()
 
   -- If on an edge window, perform circular window movement.
-  if previousWindow == newWindow and tmux.single_pane(directions.nvim[direction]) then
+  if prev_window == new_window and tmux.single_pane(directions.nvim[direction]) then
     local alt_directions = { h = 'l', j = 'k', k = 'j', l = 'h' }
     local at_alt_edge = false
 
@@ -58,14 +58,14 @@ M.switch = function(direction)
     end
   end
 
-  newWindow = vim.api.nvim_get_current_win()
+  new_window = vim.api.nvim_get_current_win()
 
   -- If nvim window hasn't changed, switch tmux pane.
-  if previousWindow == newWindow and tmux.requirement_passed() and not tmux.is_maximized() then
-    local previousPane = tmux.execute("display-message -p '#{pane_id}'")
+  if prev_window == new_window and tmux.requirement_passed() and not tmux.is_maximized() then
+    local prev_pane = tmux.execute("display-message -p '#{pane_id}'")
     tmux.execute('select-pane -' .. directions.tmux[direction])
-    local newPane = tmux.execute("display-message -p '#{pane_id}'")
-    if previousPane ~= newPane and options.save_buffers then
+    local new_pane = tmux.execute("display-message -p '#{pane_id}'")
+    if prev_pane ~= new_pane and options.save_buffers then
       vim.cmd('wall')
     end
   end
@@ -80,22 +80,22 @@ M.previous = function()
   end
 
   local function nvim_previous()
-    local previousWindow = vim.api.nvim_get_current_win()
+    local prev_window = vim.api.nvim_get_current_win()
     vim.cmd('wincmd p')
-    local newWindow = vim.api.nvim_get_current_win()
-    return previousWindow ~= newWindow
+    local new_window = vim.api.nvim_get_current_win()
+    return prev_window ~= new_window
   end
 
   local function tmux_previous()
-    local previousPane = tmux.execute("display-message -p '#{pane_id}'")
+    local prev_pane = tmux.execute("display-message -p '#{pane_id}'")
     if not tmux.is_maximized() then
       tmux.execute('select-pane -l')
     end
-    local newPane = tmux.execute("display-message -p '#{pane_id}'")
-    if previousPane ~= newPane and options.save_buffers then
+    local new_pane = tmux.execute("display-message -p '#{pane_id}'")
+    if prev_pane ~= new_pane and options.save_buffers then
       vim.cmd('wall')
     end
-    return previousPane ~= newPane
+    return prev_pane ~= new_pane
   end
 
   -- Perform the switch.

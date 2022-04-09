@@ -4,35 +4,35 @@ local tmux = require('windex.tmux')
 local utils = require('windex.utils')
 
 -- Toggle maximizing the current nvim window and tmux pane.
-M.toggle = function(maximizeOption)
-  maximizeOption = maximizeOption or 'all'
+M.toggle = function(maximize_option)
+  maximize_option = maximize_option or 'all'
 
-  if not utils.argument_is_valid(maximizeOption, { 'none', 'nvim', 'all' }) then
+  if not utils.argument_is_valid(maximize_option, { 'none', 'nvim', 'all' }) then
     return
   end
 
   -- Check if tmux requirement is passed.
-  if maximizeOption == 'all' and not tmux.requirement_passed() then
+  if maximize_option == 'all' and not tmux.requirement_passed() then
     utils.error_msg("Tmux 1.8+ is required. Use 'maximize_nvim_window()' instead or install/update Tmux")
     return
   end
 
   if not vim.w.__windex_maximized then
-    M.maximize(maximizeOption)
+    M.maximize(maximize_option)
   else
     M.restore()
   end
 end
 
 -- Maximize the current nvim window and tmux pane.
-M.maximize = function(maximizeOption)
-  maximizeOption = maximizeOption or 'all'
-  if not utils.argument_is_valid(maximizeOption, { 'none', 'nvim', 'all' }) then
+M.maximize = function(maximize_option)
+  maximize_option = maximize_option or 'all'
+  if not utils.argument_is_valid(maximize_option, { 'none', 'nvim', 'all' }) then
     return
   end
 
-  vim.w.__windex_restore_option = maximizeOption
-  if maximizeOption == 'none' then
+  vim.w.__windex_restore_option = maximize_option
+  if maximize_option == 'none' then
     return
   end
 
@@ -55,15 +55,15 @@ M.maximize = function(maximizeOption)
 
   -- Maximize nvim window.
   if vim.fn.winnr('$') ~= 1 then
-    local savedOptions = vim.opt.sessionoptions:get()
+    local saved_sessionoptions = vim.opt.sessionoptions:get()
     vim.opt.sessionoptions = { 'blank', 'buffers', 'curdir', 'folds', 'help', 'tabpages', 'winsize' }
     vim.cmd('mksession! ~/.cache/nvim/.maximize_session.vim')
-    vim.opt.sessionoptions = savedOptions
+    vim.opt.sessionoptions = saved_sessionoptions
     vim.cmd('only')
   end
 
   -- Maximize tmux pane.
-  if maximizeOption == 'all' and tmux.requirement_passed() then
+  if maximize_option == 'all' and tmux.requirement_passed() then
     if tmux.is_maximized() == false then
       tmux.execute('resize-pane -Z')
     end
@@ -72,14 +72,14 @@ M.maximize = function(maximizeOption)
 end
 
 -- Restore the nvim windows and tmux panes.
-M.restore = function(maximizeOption)
-  maximizeOption = maximizeOption or vim.w.__windex_restore_option or 'all'
-  if maximizeOption == 'none' then
+M.restore = function(maximize_option)
+  maximize_option = maximize_option or vim.w.__windex_restore_option or 'all'
+  if maximize_option == 'none' then
     return
   end
 
   -- Restore tmux panes.
-  if maximizeOption == 'all' and tmux.requirement_passed() then
+  if maximize_option == 'all' and tmux.requirement_passed() then
     if tmux.is_maximized() == true then
       tmux.execute('resize-pane -Z')
     end
@@ -90,14 +90,14 @@ M.restore = function(maximizeOption)
     -- Save buffers.
     vim.cmd('wall')
     -- Source the saved session.
-    local fileName = vim.fn.getreg('%')
-    local savedPosition = vim.fn.getcurpos()
+    local file_name = vim.fn.getreg('%')
+    local saved_position = vim.fn.getcurpos()
     vim.cmd('so ~/.cache/nvim/.maximize_session.vim')
     vim.fn.delete(vim.fn.getenv('HOME') .. '/.cache/nvim/.maximize_session.vim')
-    if vim.fn.getreg('%') ~= fileName then
-      vim.cmd('e ' .. fileName)
+    if vim.fn.getreg('%') ~= file_name then
+      vim.cmd('e ' .. file_name)
     end
-    vim.fn.setpos('.', savedPosition)
+    vim.fn.setpos('.', saved_position)
   end
   vim.w.__windex_maximized = false
 end
