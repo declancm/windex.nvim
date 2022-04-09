@@ -44,7 +44,7 @@ M.setup = function(options)
   vim.cmd([[
   aug windex_terminal
   au!
-  au TermClose * lua require('windex.terminal').restore()
+  au TermClose * lua require('windex.maximize').restore()
   aug END
   ]])
   -- Previous window autocmds.
