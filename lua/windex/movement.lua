@@ -1,6 +1,6 @@
 local M = {}
 
-local options = require('windex').options
+local config = require('windex.config')
 local tmux = require('windex.tmux')
 local utils = require('windex.utils')
 
@@ -11,7 +11,8 @@ local directions = {
 
 -- Save and quit nvim window or kill tmux pane in the direction selected.
 M.close = function(direction)
-  if not utils.argument_is_valid(direction, { 'up', 'down', 'left', 'right' }) then
+  if not utils.contains({ 'up', 'down', 'left', 'right' }, direction) then
+    utils.error_msg('Not a valid argument')
     return
   end
 
@@ -37,7 +38,8 @@ end
 
 -- Move between nvim windows and tmux panes.
 M.switch = function(direction)
-  if not utils.argument_is_valid(direction, { 'up', 'down', 'left', 'right' }) then
+  if not utils.contains({ 'up', 'down', 'left', 'right' }, direction) then
+    utils.error_msg('Not a valid argument')
     return
   end
 
@@ -65,7 +67,7 @@ M.switch = function(direction)
     local prev_pane = tmux.execute("display-message -p '#{pane_id}'")
     tmux.execute('select-pane -' .. directions.tmux[direction])
     local new_pane = tmux.execute("display-message -p '#{pane_id}'")
-    if prev_pane ~= new_pane and options.save_buffers then
+    if prev_pane ~= new_pane and config.save_buffers then
       vim.cmd('wall')
     end
   end
@@ -92,7 +94,7 @@ M.previous = function()
       tmux.execute('select-pane -l')
     end
     local new_pane = tmux.execute("display-message -p '#{pane_id}'")
-    if prev_pane ~= new_pane and options.save_buffers then
+    if prev_pane ~= new_pane and config.save_buffers then
       vim.cmd('wall')
     end
     return prev_pane ~= new_pane

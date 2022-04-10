@@ -1,8 +1,9 @@
 local M = {}
 
--- TODO: move options table to a config file
+local utils = require('windex.utils')
+local config = require('windex.config')
 
-M.setup = function(options)
+M.setup = function(user_config)
   vim.g.__windex_setup_loaded = 1
 
   -- Check if user is on Windows.
@@ -11,34 +12,19 @@ M.setup = function(options)
     return
   end
 
-  -- OPTIONS:
-
-  -- Default options:
-  local defaults = {
-    default_keymaps = true,
-    arrow_keys = false,
-    disable = false,
-    numbered_term = false,
-    save_buffers = false,
-  }
-  -- Setting options:
-  if options == nil then
-    options = defaults
-  else
-    for key, value in pairs(defaults) do
-      if options[key] == nil then
-        options[key] = value
-      end
-    end
+  -- Setting the config options.
+  if user_config ~= nil then
+    utils.merge(config, user_config)
   end
-  M.options = options
 
   -- Disable plugin.
-  if options.disable then
+  if config.disable then
     return
   end
 
   -- AUTOCMDS:
+
+  -- TODO: on nvim 0.7 release, switch to lua autocmds
 
   -- Restore windows when terminal is exited.
   vim.cmd([[
@@ -65,10 +51,13 @@ M.setup = function(options)
   ]])
 
   -- KEYMAPS:
+
+  -- TODO: on nvim 0.7 release, switch to vim.keymap.set()
+
   local keymap = vim.api.nvim_set_keymap
   local opts = { noremap = true, silent = true }
 
-  if options.default_keymaps then
+  if config.default_keymaps then
     -- Enter normal mode in terminal.
     keymap('t', '<C-n>', '<C-Bslash><C-N>', opts)
     -- Check if user is using a valid version of tmux.
@@ -86,7 +75,7 @@ M.setup = function(options)
       keymap('n', '<Leader>z', "<Cmd>lua require('windex').toggle_nvim_maximize()<CR>", opts)
     end
     -- Check if the user wants to use h,j,k,l or arrow keys.
-    if not options.arrow_keys then
+    if not config.arrow_keys then
       -- Move between nvim windows and tmux panes.
       keymap('n', '<Leader>k', "<Cmd>lua require('windex').switch_window('up')<CR>", opts)
       keymap('n', '<Leader>j', "<Cmd>lua require('windex').switch_window('down')<CR>", opts)

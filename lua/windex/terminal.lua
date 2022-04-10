@@ -1,6 +1,6 @@
 local M = {}
 
-local options = require('windex').options
+local config = require('windex.config')
 local utils = require('windex.utils')
 local maximize = require('windex.maximize')
 
@@ -14,7 +14,8 @@ M.toggle = function(maximize_option, command)
       maximize_option = 'all'
     end
 
-    if not utils.argument_is_valid(maximize_option, { 'none', 'nvim', 'all' }) then
+    if not utils.contains({ 'none', 'nvim', 'all' }, maximize_option) then
+      utils.error_msg('Not a valid argument')
       return
     end
 
@@ -24,7 +25,8 @@ end
 
 M.enter = function(maximize_option, command)
   maximize_option = maximize_option or 'all'
-  if not utils.argument_is_valid(maximize_option, { 'none', 'nvim', 'all' }) then
+  if not utils.contains({ 'none', 'nvim', 'all' }, maximize_option) then
+    utils.error_msg('Not a valid argument')
     return
   end
 
@@ -54,7 +56,7 @@ M.enter = function(maximize_option, command)
   end
 
   -- Set the local terminal options for better visuals.
-  if options.numbered_term then
+  if config.numbered_term then
     vim.opt_local.number = true
   else
     vim.opt_local.number = false
