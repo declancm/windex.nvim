@@ -47,6 +47,10 @@ M.single_pane = function(direction)
     return true
   end
 
+  if not direction then
+    return
+  end
+
   -- Compare dimensions of the tmux pane and tmux window in direction
   if direction == 'h' or direction == 'l' then
     return M.execute("display-message -p '#{pane_width}'") == M.execute("display-message -p '#{window_width}'")

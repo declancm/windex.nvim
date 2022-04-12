@@ -89,6 +89,9 @@ M.previous = function()
   end
 
   local function tmux_previous()
+    if tmux.single_pane() then
+      return
+    end
     local prev_pane = tmux.execute("display-message -p '#{pane_id}'")
     if not tmux.is_maximized() then
       tmux.execute('select-pane -l')
