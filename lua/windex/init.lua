@@ -80,6 +80,7 @@ M.setup = function(user_config)
       -- Enter normal mode in terminal.
       vim.keymap.set('t', '<C-n>', '<C-Bslash><C-N>')
       -- Check if user is using a valid version of tmux.
+
       if require('windex.tmux').requirement_passed() then
         -- Toggle the native terminal.
         vim.keymap.set({ 'n', 't' }, '<C-Bslash>', "<Cmd>lua require('windex').toggle_terminal()<CR>")
@@ -91,6 +92,7 @@ M.setup = function(user_config)
         -- Toggle maximizing the current window.
         vim.keymap.set('n', '<Leader>z', "<Cmd>lua require('windex').toggle_nvim_maximize()<CR>")
       end
+
       -- Check if the user wants to use h,j,k,l or arrow keys.
       if not config.arrow_keys then
         -- Move between nvim windows and tmux panes.
@@ -163,6 +165,33 @@ M.setup = function(user_config)
       end
       -- Switch to previous nvim window or tmux pane.
       keymap('n', '<Leader>;', "<Cmd>lua require('windex').previous_window()<CR>", opts)
+    end
+  end
+
+  if config.extra_keymaps then
+    if vim.fn.has('nvim-0.7.0') == 1 then
+      -- Create nvim panes:
+      vim.keymap.set('n', '<Leader>v', '<Cmd>wincmd v<CR>')
+      vim.keymap.set('n', '<Leader>s', '<Cmd>wincmd s<CR>')
+
+      if require('windex.tmux').requirement_passed() then
+        -- Create tmux panes:
+        vim.keymap.set('n', '<Leader>tv', "<Cmd>lua require('windex').create_pane('vertical')<CR>")
+        vim.keymap.set('n', '<Leader>ts', "<Cmd>lua require('windex').create_pane('horizontal')<CR>")
+      end
+    else
+      local keymap = vim.api.nvim_set_keymap
+      local opts = { noremap = true, silent = true }
+
+      -- Create nvim panes:
+      keymap('n', '<Leader>v', '<Cmd>wincmd v<CR>', opts)
+      keymap('n', '<Leader>s', '<Cmd>wincmd s<CR>', opts)
+
+      if require('windex.tmux').requirement_passed() then
+        -- Create tmux panes:
+        keymap('n', '<Leader>tv', "<Cmd>lua require('windex').create_pane('vertical')<CR>", opts)
+        keymap('n', '<Leader>ts', "<Cmd>lua require('windex').create_pane('horizontal')<CR>", opts)
+      end
     end
   end
 end
