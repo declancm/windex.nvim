@@ -31,7 +31,19 @@ M.close = function(direction)
     tmux.execute('select-pane -' .. directions.tmux[direction])
     local new_pane = tmux.execute("display-message -p '#{pane_id}'")
     if prev_pane ~= new_pane then
-      tmux.execute('kill-pane')
+      if config.warnings then
+        tmux.execute('select-pane  -l')
+        -- TODO: use a floating window instead of command line
+        local input = vim.fn.input(
+          string.format("Are you sure you want to close the following tmux pane: '%s'? [y/n] ", new_pane)
+        )
+        if utils.contains({ 'y', 'yes', 'Y', 'Yes', 'YES' }, input) then
+          tmux.execute('select-pane  -l')
+          tmux.execute('kill-pane')
+        end
+      else
+        tmux.execute('kill-pane')
+      end
     end
   end
 end

@@ -7,7 +7,7 @@ M.execute = function(command)
   local socket = vim.split(TMUX, ',')[1]
   local tmux = string.format('tmux -S %s %s', socket, command)
 
-  local handle = assert(io.popen(tmux), string.format('Error: Unable to execute the tmux command', tmux))
+  local handle = assert(io.popen(tmux), string.format('Error: Unable to execute the tmux command ', tmux))
   local result = handle:read()
   handle:close()
 

@@ -85,6 +85,7 @@ arrow_keys = false,     -- Default window movement keymaps use arrow keys instea
 disable = false,        -- Disable the plugin.
 numbered_term = false,  -- Enable line numbers in the terminal.
 save_buffers = false,   -- Save all buffers before switching tmux panes.
+warnings = true,        -- Enable warnings before some actions such as closing tmux panes.
 ```
 
 ### Example Configuration

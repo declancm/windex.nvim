@@ -5,4 +5,5 @@ return {
   disable = false,
   numbered_term = false,
   save_buffers = false,
+  warnings = true,
 }
