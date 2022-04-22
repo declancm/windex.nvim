@@ -57,10 +57,12 @@ M.maximize = function(maximize_option)
 
   -- Maximize nvim window.
   if vim.fn.winnr('$') ~= 1 then
+    -- Save the session.
     local saved_sessionoptions = vim.opt.sessionoptions:get()
     vim.opt.sessionoptions = { 'blank', 'buffers', 'curdir', 'folds', 'help', 'tabpages', 'winsize' }
     vim.cmd('mksession! ~/.cache/nvim/.maximize_session.vim')
     vim.opt.sessionoptions = saved_sessionoptions
+
     vim.cmd('only')
   end
 
@@ -70,6 +72,7 @@ M.maximize = function(maximize_option)
       tmux.execute('resize-pane -Z')
     end
   end
+
   vim.w.__windex_maximized = true
 end
 
@@ -82,25 +85,30 @@ M.restore = function(maximize_option)
 
   -- Restore tmux panes.
   if maximize_option == 'all' and tmux.requirement_passed() then
-    if tmux.is_maximized() == true then
+    if tmux.is_maximized() then
       tmux.execute('resize-pane -Z')
+      vim.cmd('sleep 50m')
     end
   end
 
   -- Restore nvim windows.
   if vim.fn.filereadable(vim.fn.getenv('HOME') .. '/.cache/nvim/.maximize_session.vim') == 1 then
-    -- Save buffers.
     vim.cmd('wall')
-    -- Source the saved session.
     local file_name = vim.fn.getreg('%')
     local saved_position = vim.fn.getcurpos()
-    vim.cmd('so ~/.cache/nvim/.maximize_session.vim')
+
+    -- Source the saved session.
+    vim.cmd('source ~/.cache/nvim/.maximize_session.vim')
+
+    -- Delete the saved session.
     vim.fn.delete(vim.fn.getenv('HOME') .. '/.cache/nvim/.maximize_session.vim')
+
     if vim.fn.getreg('%') ~= file_name then
-      vim.cmd('e ' .. file_name)
+      vim.cmd('edit ' .. file_name)
     end
     vim.fn.setpos('.', saved_position)
   end
+
   vim.w.__windex_maximized = false
 end
 

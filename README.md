@@ -64,12 +64,17 @@ https://user-images.githubusercontent.com/90937622/159681079-58f36668-e78b-41fa-
 
 ## 📦 Installation
 
-Install with your favourite plugin manager:
+Install with your favourite plugin manager and run the setup function.
+
+_Note: I highly recommend using [bufresize.nvim](https://github.com/kwkarlwang/bufresize.nvim) especially when using tmux._
 
 ### Packer
 
 ```lua
-use 'declancm/windex.nvim'
+use {
+  'declancm/windex.nvim',
+  config = function() require('windex').setup() end
+}
 ```
 
 ## ⚙️ Configuration

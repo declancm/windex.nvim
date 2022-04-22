@@ -4,8 +4,6 @@ local utils = require('windex.utils')
 local config = require('windex.config')
 
 M.setup = function(user_config)
-  vim.g.__windex_setup_loaded = 1
-
   -- Check if user is on Windows.
   if vim.fn.has('win32') == 1 then
     require('windex.utils').error_msg('A unix system is required for windex. Have you tried using WSL?')
