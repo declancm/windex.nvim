@@ -3,6 +3,8 @@ local M = {}
 local tmux = require('windex.tmux')
 local utils = require('windex.utils')
 
+M.saved = {}
+
 -- Toggle maximizing the current nvim window and tmux pane.
 M.toggle = function(maximize_option)
   maximize_option = maximize_option or 'all'
@@ -37,6 +39,11 @@ M.maximize = function(maximize_option)
   if maximize_option == 'none' then
     return
   end
+
+  -- Save options.
+  M.saved = {}
+  M.saved.cmdheight = vim.opt.cmdheight
+  M.saved.cmdwinheight = vim.opt.cmdwinheight
 
   -- Close floating windows because they break session files.
   for _, win in ipairs(vim.api.nvim_list_wins()) do
@@ -107,6 +114,11 @@ M.restore = function(maximize_option)
       vim.cmd('edit ' .. file_name)
     end
     vim.fn.setpos('.', saved_position)
+  end
+
+  -- Restore saved options.
+  for option, value in pairs(M.saved) do
+    vim.opt[option] = value
   end
 
   vim.w.__windex_maximized = false
