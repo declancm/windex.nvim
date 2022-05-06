@@ -4,6 +4,11 @@ local config = require('windex.config')
 local utils = require('windex.utils')
 local maximize = require('windex.maximize')
 
+local terminal_maximized
+local terminal_restore_option
+local previous_buffer
+local terminal_buffer
+
 -- Toggle the native terminal.
 M.toggle = function(maximize_option, command)
   if vim.bo.buftype == 'terminal' then
@@ -30,12 +35,12 @@ M.enter = function(maximize_option, command)
     return
   end
 
-  if vim.w.__windex_maximized then
-    vim.w.__windex_term_restore = false
+  if maximize.maximized then
+    terminal_maximized = false
   else
-    vim.w.__windex_term_restore = true
+    terminal_maximized = true
   end
-  vim.w.__windex_term_restore_option = maximize_option
+  terminal_restore_option = maximize_option
 
   -- Maximize the window.
   if maximize_option ~= 'none' then
@@ -43,16 +48,16 @@ M.enter = function(maximize_option, command)
   end
 
   -- Save the previous buffer number.
-  vim.g.__windex_term_prev = vim.fn.bufnr()
+  previous_buffer = vim.fn.bufnr()
 
   -- If a command is given or no previous terminal buffer exists, create a new one.
   -- Otherwise, enter the buffer of the previous terminal.
   if command ~= nil then
     vim.cmd('keepalt terminal ' .. command)
-  elseif vim.g.__windex_term_bufnr == nil or vim.fn.bufname(vim.g.__windex_term_bufnr) == '' then
+  elseif terminal_buffer == nil or vim.fn.bufname(terminal_buffer) == '' then
     vim.cmd('keepalt terminal')
   else
-    vim.cmd('keepalt buffer ' .. vim.g.__windex_term_bufnr)
+    vim.cmd('keepalt buffer ' .. terminal_buffer)
   end
 
   -- Set the local terminal options for better visuals.
@@ -68,14 +73,14 @@ end
 
 M.exit = function()
   -- Save the terminal buffer number.
-  vim.g.__windex_term_bufnr = vim.fn.bufnr()
+  terminal_buffer = vim.fn.bufnr()
 
   -- Return to the previous buffer.
-  if vim.g.__windex_term_prev == nil or vim.fn.bufname(vim.g.__windex_term_prev) == '' then
+  if previous_buffer == nil or vim.fn.bufname(previous_buffer) == '' then
     local keys = vim.api.nvim_replace_termcodes('<C-\\><C-N><C-^>', true, false, true)
     vim.api.nvim_feedkeys(keys, 'n', true)
   else
-    vim.cmd('keepalt buffer ' .. vim.g.__windex_term_prev)
+    vim.cmd('keepalt buffer ' .. previous_buffer)
   end
 
   -- Restore the windows.
@@ -83,8 +88,8 @@ M.exit = function()
 end
 
 M.restore = function()
-  if vim.w.__windex_term_restore then
-    maximize.restore(vim.w.__windex_term_restore_option)
+  if terminal_maximized then
+    maximize.restore(terminal_restore_option)
   end
 end
 

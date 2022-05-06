@@ -3,12 +3,13 @@ local M = {}
 local tmux = require('windex.tmux')
 local utils = require('windex.utils')
 
-M.saved = {}
+M.maximized = false
+local saved = {}
+local saved_maximize_option
 
 -- Toggle maximizing the current nvim window and tmux pane.
 M.toggle = function(maximize_option)
   maximize_option = maximize_option or 'all'
-
   if not utils.contains({ 'none', 'nvim', 'all' }, maximize_option) then
     utils.error_msg('Not a valid argument')
     return
@@ -20,10 +21,10 @@ M.toggle = function(maximize_option)
     return
   end
 
-  if not vim.w.__windex_maximized then
-    M.maximize(maximize_option)
-  else
+  if M.maximized then
     M.restore()
+  else
+    M.maximize(maximize_option)
   end
 end
 
@@ -35,15 +36,19 @@ M.maximize = function(maximize_option)
     return
   end
 
-  vim.w.__windex_restore_option = maximize_option
-  if maximize_option == 'none' then
+  saved_maximize_option = maximize_option
+  if
+    (maximize_option == 'none')
+    or (maximize_option == 'nvim' and vim.fn.winnr('$') == 1)
+    or (maximize_option == 'all' and vim.fn.winnr('$') == 1 and (tmux.is_maximized() or tmux.single_pane()) == true)
+  then
     return
   end
 
   -- Save options.
-  M.saved = {}
-  M.saved.cmdheight = vim.opt.cmdheight
-  M.saved.cmdwinheight = vim.opt.cmdwinheight
+  saved = {}
+  saved.cmdheight = vim.opt.cmdheight
+  saved.cmdwinheight = vim.opt.cmdwinheight
 
   -- Close floating windows because they break session files.
   for _, win in ipairs(vim.api.nvim_list_wins()) do
@@ -80,12 +85,12 @@ M.maximize = function(maximize_option)
     end
   end
 
-  vim.w.__windex_maximized = true
+  M.maximized = true
 end
 
 -- Restore the nvim windows and tmux panes.
 M.restore = function(maximize_option)
-  maximize_option = maximize_option or vim.w.__windex_restore_option or 'all'
+  maximize_option = maximize_option or saved_maximize_option or 'all'
   if maximize_option == 'none' then
     return
   end
@@ -117,11 +122,11 @@ M.restore = function(maximize_option)
   end
 
   -- Restore saved options.
-  for option, value in pairs(M.saved) do
+  for option, value in pairs(saved) do
     vim.opt[option] = value
   end
 
-  vim.w.__windex_maximized = false
+  M.maximized = false
 end
 
 return M

@@ -84,10 +84,12 @@ A settings table can be passed into the setup function for custom options.
 ### Default Settings
 
 ```lua
+-- KEYMAPS:
 default_keymaps = true, -- Enable default keymaps.
 extra_keymaps = false,  -- Enable extra keymaps.
 arrow_keys = false,     -- Default window movement keymaps use arrow keys instead of 'h,j,k,l'.
-disable = false,        -- Disable the plugin.
+
+-- OPTIONS:
 numbered_term = false,  -- Enable line numbers in the terminal.
 save_buffers = false,   -- Save all buffers before switching tmux panes.
 warnings = true,        -- Enable warnings before some actions such as closing tmux panes.
