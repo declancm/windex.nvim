@@ -1,12 +1,15 @@
 # windex.nvim
 
-🧼 __A neovim plugin for cleeean neovim window and tmux pane functions.__ 🧼
+🧼 __A neovim plugin for cleeean neovim window (and optionally tmux pane) functions.__ 🧼
 
 Works with or without tmux!
 
+
 ## ✨ Features
 
-### Maximize Current Window
+Please see [maximize.nvim](https://github.com/declancm/maximize.nvim) for just the window maximizing feature.
+
+### Window Maximizing
 
 * Use `<leader>z` to toggle maximizing the current neovim window (without any of
   the ugly borders that other maximizing plugins create) AND the current
