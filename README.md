@@ -14,7 +14,8 @@ Works with or without tmux!
 * Works with plugins such as 'nvim-scrollview', which have floating windows
   (unlike other maximizing plugins).
 
-Please see [maximize.nvim](https://github.com/declancm/maximize.nvim) for just the window maximizing feature.
+__Note: Please see [maximize.nvim](https://github.com/declancm/maximize.nvim)
+for using just the window maximizing feature.__
 
 ### Terminal Toggle
 
@@ -173,7 +174,7 @@ _Note: Check the default keymaps on how to implement the functions in keymaps._
   ```
 
 * Maximize the current neovim window __AND__ tmux pane for when you need something
-  comletely fullscreen.
+  completely fullscreen.
 
   ```lua
   require('windex').toggle_maximize()
