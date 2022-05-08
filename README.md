@@ -1,13 +1,10 @@
 # windex.nvim
 
-🧼 __A neovim plugin for cleeean neovim window (and optionally tmux pane) functions.__ 🧼
+🧼 __A neovim plugin for cleeean neovim window (and tmux pane) functions.__ 🧼
 
 Works with or without tmux!
 
-
 ## ✨ Features
-
-Please see [maximize.nvim](https://github.com/declancm/maximize.nvim) for just the window maximizing feature.
 
 ### Window Maximizing
 
@@ -16,6 +13,8 @@ Please see [maximize.nvim](https://github.com/declancm/maximize.nvim) for just t
   tmux pane.
 * Works with plugins such as 'nvim-scrollview', which have floating windows
   (unlike other maximizing plugins).
+
+Please see [maximize.nvim](https://github.com/declancm/maximize.nvim) for just the window maximizing feature.
 
 ### Terminal Toggle
 
