@@ -28,11 +28,11 @@ M.setup = function(user_config)
     })
     -- Previous window autocmds.
     autocmd('FocusGained', {
-      command = "lua vim.g.__windex_previous = 'tmux'",
+      command = "lua require('windex.movement').status_previous = 'tmux'",
       group = augroup('windex_previous_tmux', {}),
     })
     autocmd('WinLeave', {
-      command = "lua vim.g.__windex_previous = 'nvim'",
+      command = "lua require('windex.movement').status_previous = 'nvim'",
       group = augroup('windex_previous_nvim', {}),
     })
     -- Delete session file from cache.
@@ -52,8 +52,8 @@ M.setup = function(user_config)
     vim.cmd([[
     aug windex_previous
     au!
-    au FocusGained * lua vim.g.__windex_previous = 'tmux'
-    au WinLeave * lua vim.g.__windex_previous = 'nvim'
+    au FocusGained * lua require('windex.movement').status_previous = 'tmux'
+    au WinLeave * lua require('windex.movement').status_previous = 'nvim'
     aug END
     ]])
     -- Delete session file from cache.

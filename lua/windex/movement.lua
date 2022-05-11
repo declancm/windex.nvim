@@ -9,6 +9,8 @@ local directions = {
   tmux = { up = 'U', down = 'D', left = 'L', right = 'R' },
 }
 
+M.status_previous = 'nvim'
+
 -- Save and quit nvim window or kill tmux pane in the direction selected.
 M.close = function(direction)
   if not utils.contains({ 'up', 'down', 'left', 'right' }, direction) then
@@ -116,7 +118,7 @@ M.previous = function()
   end
 
   -- Perform the switch.
-  if vim.g.__windex_previous == 'tmux' then
+  if M.status_previous == 'tmux' then
     if not tmux_previous() then
       nvim_previous()
     end
