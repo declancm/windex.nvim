@@ -3,12 +3,9 @@ local M = {}
 local tmux = require('windex.tmux')
 local utils = require('windex.utils')
 
-M.maximized = false
-local saved = {}
-local saved_maximize_option
-
 -- Toggle maximizing the current nvim window and tmux pane.
 M.toggle = function(maximize_option)
+  -- Check the function argument.
   maximize_option = maximize_option or 'all'
   if not utils.contains({ 'none', 'nvim', 'all' }, maximize_option) then
     utils.error_msg('Not a valid argument')
@@ -21,7 +18,7 @@ M.toggle = function(maximize_option)
     return
   end
 
-  if M.maximized then
+  if vim.t.maximized then
     M.restore()
   else
     M.maximize(maximize_option)
@@ -36,7 +33,7 @@ M.maximize = function(maximize_option)
     return
   end
 
-  saved_maximize_option = maximize_option
+  vim.t.saved_maximize_option = maximize_option
   if
     (maximize_option == 'none')
     or (maximize_option == 'nvim' and vim.fn.winnr('$') == 1)
@@ -45,35 +42,41 @@ M.maximize = function(maximize_option)
     return
   end
 
-  -- Save options.
-  saved = {}
-  saved.cmdheight = vim.opt.cmdheight
-  saved.cmdwinheight = vim.opt.cmdwinheight
-
-  -- Close floating windows because they break session files.
-  for _, win in ipairs(vim.api.nvim_list_wins()) do
-    local config = vim.api.nvim_win_get_config(win)
-    if config.relative ~= '' then
-      vim.api.nvim_win_close(win, false)
-    end
-  end
-
-  -- If a floating window still exists, it contains unsaved changes so return.
-  for _, win in ipairs(vim.api.nvim_list_wins()) do
-    local config = vim.api.nvim_win_get_config(win)
-    if config.relative ~= '' then
-      utils.error_msg('Cannot maximize. A floating window with unsaved changes exists')
-      return
-    end
-  end
-
   -- Maximize nvim window.
   if vim.fn.winnr('$') ~= 1 then
+    -- A temporary file for storing the current session. It's unique and per tab.
+    vim.t.tmp_session_file = '~/.cache/nvim/.maximize_session-' .. os.time() .. '.vim'
+
+    -- Save options.
+    vim.t.saved_cmdheight = vim.opt_local.cmdheight:get()
+    vim.t.saved_cmdwinheight = vim.opt_local.cmdwinheight:get()
+
+    -- Handle floating windows
+    -- TODO: after the next Neovim release, we don't need to handle float wins
+    -- (https://github.com/neovim/neovim/commit/3fe6bf3a1e50299dbdd6314afbb18e468eb7ce08)
+
+    -- Close floating windows because they break session files.
+    for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+      local config = vim.api.nvim_win_get_config(win)
+      if config.relative ~= '' then
+        vim.api.nvim_win_close(win, false)
+      end
+    end
+
+    -- If a floating window still exists, it contains unsaved changes so return.
+    for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+      local config = vim.api.nvim_win_get_config(win)
+      if config.relative ~= '' then
+        utils.error_msg('Cannot maximize. A floating window with unsaved changes exists')
+        return
+      end
+    end
+
     -- Save the session.
-    local saved_sessionoptions = vim.opt.sessionoptions:get()
-    vim.opt.sessionoptions = { 'blank', 'buffers', 'curdir', 'folds', 'help', 'tabpages', 'winsize' }
-    vim.cmd('mksession! ~/.cache/nvim/.maximize_session.vim')
-    vim.opt.sessionoptions = saved_sessionoptions
+    local saved_sessionoptions = vim.opt_local.sessionoptions:get()
+    vim.opt_local.sessionoptions = { 'blank', 'buffers', 'curdir', 'folds', 'help', 'winsize' }
+    vim.cmd('mksession! ' .. vim.t.tmp_session_file)
+    vim.opt_local.sessionoptions = saved_sessionoptions
 
     vim.cmd('only')
   end
@@ -85,12 +88,13 @@ M.maximize = function(maximize_option)
     end
   end
 
-  M.maximized = true
+  vim.t.maximized = true
 end
 
 -- Restore the nvim windows and tmux panes.
 M.restore = function(maximize_option)
-  maximize_option = maximize_option or saved_maximize_option or 'all'
+  -- Set the function argument.
+  maximize_option = maximize_option or vim.t.saved_maximize_option or 'all'
   if maximize_option == 'none' then
     return
   end
@@ -104,29 +108,32 @@ M.restore = function(maximize_option)
   end
 
   -- Restore nvim windows.
-  if vim.fn.filereadable(vim.fn.getenv('HOME') .. '/.cache/nvim/.maximize_session.vim') == 1 then
+  if vim.fn.filereadable(vim.fn.expand(vim.t.tmp_session_file)) == 1 then
+    -- Avoid [No Name] buffer if set hidden (E.g., when maximizing the help window
+    -- and then restore)
+    vim.bo.bufhidden = 'wipe'
+
     vim.cmd('wall')
     local file_name = vim.fn.getreg('%')
     local saved_position = vim.fn.getcurpos()
 
     -- Source the saved session.
-    vim.cmd('source ~/.cache/nvim/.maximize_session.vim')
+    vim.cmd('silent source ' .. vim.t.tmp_session_file)
 
     -- Delete the saved session.
-    vim.fn.delete(vim.fn.getenv('HOME') .. '/.cache/nvim/.maximize_session.vim')
+    vim.fn.delete(vim.fn.expand(vim.t.tmp_session_file))
 
     if vim.fn.getreg('%') ~= file_name then
       vim.cmd('edit ' .. file_name)
     end
     vim.fn.setpos('.', saved_position)
+
+    -- Restore saved options.
+    vim.opt_local.cmdheight = vim.t.saved_cmdheight
+    vim.opt_local.cmdwinheight = vim.t.saved_cmdwinheight
   end
 
-  -- Restore saved options.
-  for option, value in pairs(saved) do
-    vim.opt[option] = value
-  end
-
-  M.maximized = false
+  vim.t.maximized = false
 end
 
 return M

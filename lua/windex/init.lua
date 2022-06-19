@@ -36,8 +36,8 @@ M.setup = function(user_config)
       group = augroup('windex_previous_nvim', {}),
     })
     -- Delete session file from cache.
-    autocmd({ 'VimEnter', 'VimLeave' }, {
-      command = "call delete(getenv('HOME') . '/.cache/nvim/.maximize_session.vim')",
+    autocmd('VimLeave', {
+      callback = utils.delete_session_files,
       group = augroup('windex_maximize', {}),
     })
   else
@@ -60,8 +60,7 @@ M.setup = function(user_config)
     vim.cmd([[
     aug windex_maximize
     au!
-    au VimEnter * call delete(getenv('HOME') . '/.cache/nvim/.maximize_session.vim')
-    au VimLeave * call delete(getenv('HOME') . '/.cache/nvim/.maximize_session.vim')
+    au VimLeave * lua require('windex.utils').delete_session_files()
     aug END
     ]])
   end
