@@ -109,13 +109,12 @@ M.restore = function(maximize_option)
 
   -- Restore nvim windows.
   if vim.fn.filereadable(vim.fn.expand(vim.t.tmp_session_file)) == 1 then
-    -- Avoid [No Name] buffer if set hidden (E.g., when maximizing the help window
-    -- and then restore)
-    vim.bo.bufhidden = 'wipe'
-
+    -- Save changes to all buffers.
     vim.cmd('wall')
-    local file_name = vim.fn.getreg('%')
-    local saved_position = vim.fn.getcurpos()
+
+    -- Save the current file and cursor position.
+    local saved_file_name = vim.fn.getreg('%')
+    local saved_cursor_position = vim.fn.getcurpos()
 
     -- Source the saved session.
     vim.cmd('silent source ' .. vim.t.tmp_session_file)
@@ -123,10 +122,11 @@ M.restore = function(maximize_option)
     -- Delete the saved session.
     vim.fn.delete(vim.fn.expand(vim.t.tmp_session_file))
 
-    if vim.fn.getreg('%') ~= file_name then
-      vim.cmd('edit ' .. file_name)
+    -- Restore the current file and cursor position.
+    if vim.fn.getreg('%') ~= saved_file_name then
+      vim.cmd('edit ' .. saved_file_name)
     end
-    vim.fn.setpos('.', saved_position)
+    vim.fn.setpos('.', saved_cursor_position)
 
     -- Restore saved options.
     vim.opt_local.cmdheight = vim.t.saved_cmdheight

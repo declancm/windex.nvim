@@ -35,7 +35,7 @@ M.enter = function(maximize_option, command)
     return
   end
 
-  if maximize.maximized then
+  if vim.t.maximized then
     terminal_maximized = false
   else
     terminal_maximized = true
