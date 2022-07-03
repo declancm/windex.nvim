@@ -15,7 +15,11 @@ M.status_previous = 'nvim'
 M.close = function(direction)
   if direction then
     direction = direction:lower()
+  else
+    utils.error_msg('A direction is required')
+    return
   end
+
   if not utils.contains({ 'up', 'down', 'left', 'right' }, direction) then
     utils.error_msg('Not a valid argument')
     return
@@ -57,7 +61,11 @@ end
 M.switch = function(direction)
   if direction then
     direction = direction:lower()
+  else
+    utils.error_msg('A direction is required')
+    return
   end
+
   if not utils.contains({ 'up', 'down', 'left', 'right' }, direction) then
     utils.error_msg('Not a valid argument')
     return
@@ -145,7 +153,11 @@ M.create_pane = function(direction)
 
   if direction then
     direction = direction:lower()
+  else
+    utils.error_msg('A direction is required')
+    return
   end
+
   if direction == 'vertical' then
     tmux.execute("split-window -h -c '#{pane_current_path}'")
   elseif direction == 'horizontal' or direction == 'Horizontal' then
