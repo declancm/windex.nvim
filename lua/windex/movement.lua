@@ -13,6 +13,9 @@ M.status_previous = 'nvim'
 
 -- Save and quit nvim window or kill tmux pane in the direction selected.
 M.close = function(direction)
+  if direction then
+    direction = direction:lower()
+  end
   if not utils.contains({ 'up', 'down', 'left', 'right' }, direction) then
     utils.error_msg('Not a valid argument')
     return
@@ -39,7 +42,7 @@ M.close = function(direction)
         local input = vim.fn.input(
           string.format("Are you sure you want to close the following tmux pane: '%s'? [y/n] ", new_pane)
         )
-        if utils.contains({ 'y', 'yes', 'Y', 'Yes', 'YES' }, input) then
+        if utils.contains({ 'y', 'yes' }, input:lower()) then
           tmux.execute('select-pane  -l')
           tmux.execute('kill-pane')
         end
@@ -52,6 +55,9 @@ end
 
 -- Move between nvim windows and tmux panes.
 M.switch = function(direction)
+  if direction then
+    direction = direction:lower()
+  end
   if not utils.contains({ 'up', 'down', 'left', 'right' }, direction) then
     utils.error_msg('Not a valid argument')
     return
@@ -137,6 +143,9 @@ M.create_pane = function(direction)
     return
   end
 
+  if direction then
+    direction = direction:lower()
+  end
   if direction == 'vertical' then
     tmux.execute("split-window -h -c '#{pane_current_path}'")
   elseif direction == 'horizontal' or direction == 'Horizontal' then

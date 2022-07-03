@@ -6,7 +6,12 @@ local utils = require('windex.utils')
 -- Toggle maximizing the current nvim window and tmux pane.
 M.toggle = function(maximize_option)
   -- Check the function argument.
-  maximize_option = maximize_option or 'all'
+  if maximize_option then
+    maximize_option = maximize_option:lower()
+  else
+    maximize_option = 'all'
+  end
+
   if not utils.contains({ 'none', 'nvim', 'all' }, maximize_option) then
     utils.error_msg('Not a valid argument')
     return
@@ -27,7 +32,12 @@ end
 
 -- Maximize the current nvim window and tmux pane.
 M.maximize = function(maximize_option)
-  maximize_option = maximize_option or 'all'
+  if maximize_option then
+    maximize_option = maximize_option:lower()
+  else
+    maximize_option = 'all'
+  end
+
   if not utils.contains({ 'none', 'nvim', 'all' }, maximize_option) then
     utils.error_msg('Not a valid argument')
     return
@@ -94,7 +104,12 @@ end
 -- Restore the nvim windows and tmux panes.
 M.restore = function(maximize_option)
   -- Set the function argument.
-  maximize_option = maximize_option or vim.t.saved_maximize_option or 'all'
+  if maximize_option then
+    maximize_option = maximize_option:lower()
+  else
+    maximize_option = vim.t.saved_maximize_option or 'all'
+  end
+
   if maximize_option == 'none' then
     return
   end

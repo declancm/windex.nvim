@@ -14,9 +14,10 @@ M.toggle = function(maximize_option, command)
   if vim.bo.buftype == 'terminal' then
     M.exit()
   else
-    maximize_option = maximize_option or 'all'
-    if maximize_option == '' then
+    if not maximize_option or maximize_option == '' then
       maximize_option = 'all'
+    else
+      maximize_option = maximize_option:lower()
     end
 
     if not utils.contains({ 'none', 'nvim', 'all' }, maximize_option) then
@@ -29,7 +30,12 @@ M.toggle = function(maximize_option, command)
 end
 
 M.enter = function(maximize_option, command)
-  maximize_option = maximize_option or 'all'
+  if maximize_option then
+    maximize_option = maximize_option:lower()
+  else
+    maximize_option = 'all'
+  end
+
   if not utils.contains({ 'none', 'nvim', 'all' }, maximize_option) then
     utils.error_msg('Not a valid argument')
     return
