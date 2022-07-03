@@ -128,7 +128,7 @@ M.restore = function(maximize_option)
     vim.cmd('wall')
 
     -- Save the current file and cursor position.
-    local saved_file_name = vim.fn.getreg('%')
+    local saved_file_name = vim.fn.expand('%:p')
     local saved_cursor_position = vim.fn.getcurpos()
 
     -- Source the saved session.
@@ -138,7 +138,7 @@ M.restore = function(maximize_option)
     vim.fn.delete(vim.fn.expand(vim.t.tmp_session_file))
 
     -- Restore the current file and cursor position.
-    if vim.fn.getreg('%') ~= saved_file_name then
+    if vim.fn.expand('%:p') ~= saved_file_name then
       vim.cmd('edit ' .. saved_file_name)
     end
     vim.fn.setpos('.', saved_cursor_position)
